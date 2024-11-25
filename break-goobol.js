@@ -38,33 +38,44 @@ class BAN {
         
     if (typeof number == "string") {
       const result = BAN.parseNumber(number)
+      console.log(result)
+      return
     }
     
     newArray.mantissa *= number
-    
-    if (newArray.mantissa > 10) {
-      const mantissaOom = Math.floor(Math.log10(newArray.mantissa))
-      
-      newArray.numberArray[1] += mantissaOom
-      newArray.mantissa /= 10 ** mantissaOom
-    }
+    newArray.normalizeMantissa()
     
     return newArray
   }
   
-  static parseNumber(numberString) {
+  normalizeMantissa() {
+    if (this.mantissa >= 10) {
+      const mantissaOom = Math.floor(Math.log10(this.mantissa))
+      
+      this.numberArray[1] += mantissaOom
+      this.mantissa /= 10 ** mantissaOom
+    }
+  }
+  
+  static parseNumber(numberString) { 
     if (typeof numberString == "number") return numberString
     
     const parsedNumber = Number(numberString)
-    if (parsedNumber !== Number.POSITIVE_INFINITY || !Number.isNaN(parsedNumber)) return parsedNumber
+    if (parsedNumber !== Number.POSITIVE_INFINITY && !Number.isNaN(parsedNumber)) return parsedNumber
       
     const numberHasENotation = numberString.includes("e")
-    
     if (!numberHasENotation) throw new Error("BAN Error: The parsed number is either infinite or not a number. Parsed number: " + parsedNumber)
     
+    let newArray = new BAN(10)
     const [mantissa, magnitude] = numberString.split("e")
     
-    const parsedMantissa = parseInt(mantissa)
-    const parsedMagnitude = parseInt(magnitude)
+    const parsedMantissa = Number(mantissa)
+    const parsedMagnitude = Number(magnitude)
+    
+    newArray.mantissa = parsedMantissa
+    newArray.numberArray[1] = parsedMagnitude
+    
+    newArray.normalizeMantissa()
+    return newArray
   }
 }
