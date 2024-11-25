@@ -35,14 +35,29 @@ class BAN {
     const newArray = new BAN(this.numberArray, {
       mantissa: this.mantissa
     })
+        
+    if (typeof number == "string") {
+      const result = BAN.parseNumber(number)
+    }
     
     newArray.mantissa *= number
     
     if (newArray.mantissa > 10) {
-      const mantissaOoM
-      newArray.numberArray[1] += 
+      const mantissaOom = Math.floor(Math.log10(newArray.mantissa))
+      
+      newArray.numberArray[1] += mantissaOom
+      newArray.mantissa /= 10 ** mantissaOom
     }
     
     return newArray
+  }
+  
+  static parseNumber(number) {
+    const parsedNumber = Number(number)
+    
+    if (parsedNumber !== Number.POSITIVE_INFINITY || !Number.isNaN(parsedNumber)) return parsedNumber
+    f
+      
+    const [mantissa, magnitude] = number.split("e")
   }
 }
