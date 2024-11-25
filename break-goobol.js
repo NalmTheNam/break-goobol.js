@@ -38,8 +38,7 @@ class BAN {
         
     if (typeof number == "string") {
       const result = BAN.parseNumber(number)
-      console.log(result)
-      return
+      return result
     }
     
     newArray.mantissa *= number
