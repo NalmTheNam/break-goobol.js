@@ -17,6 +17,7 @@ class BAN {
     
     const number = numberOrArray
     this.numberArray = [number]
+    this.significand = 0
   }
   
   toString() {
@@ -27,5 +28,9 @@ class BAN {
     if (entryCount === 2) {
       return (this.numberArray[0] ** this.numberArray[1]).toString()
     }
+  }
+  
+  mul(number) {
+    return new BAN()
   }
 }
