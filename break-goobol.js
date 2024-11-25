@@ -1,5 +1,5 @@
 class BAN {
-  constructor(numberOrArray, options = {}) {
+  constructor(numberOrArray = [0], options = {}) {
     this.mantissa = options?.mantissa ?? 1
     
     if (numberOrArray instanceof Array) {
@@ -52,12 +52,19 @@ class BAN {
     return newArray
   }
   
-  static parseNumber(number) {
-    const parsedNumber = Number(number)
+  static parseNumber(numberString) {
+    if (typeof numberString == "number") return numberString
     
+    const parsedNumber = Number(numberString)
     if (parsedNumber !== Number.POSITIVE_INFINITY || !Number.isNaN(parsedNumber)) return parsedNumber
-    f
       
-    const [mantissa, magnitude] = number.split("e")
+    const numberHasENotation = numberString.includes("e")
+    
+    if (!numberHasENotation) throw new Error("BAN Error: The parsed number is either infinite or not a number. Parsed number: " + parsedNumber)
+    
+    const [mantissa, magnitude] = numberString.split("e")
+    
+    const parsedMantissa = parseInt(mantissa)
+    const parsedMagnitude = parseInt(magnitude)
   }
 }
