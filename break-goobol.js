@@ -1,5 +1,7 @@
 class BAN {
-  constructor(numberOrArray) {
+  constructor(numberOrArray, options = {}) {
+    this.mantissa = options?.mantissa ?? 1
+    
     if (numberOrArray instanceof Array) {
       this.numberArray = numberOrArray
       
@@ -12,12 +14,11 @@ class BAN {
       if (lastEntry === 1) this.numberArray.pop()
       */
       
-      return
+      return this
     }
     
     const number = numberOrArray
     this.numberArray = [number]
-    this.significand = 0
   }
   
   toString() {
@@ -31,6 +32,17 @@ class BAN {
   }
   
   mul(number) {
-    return new BAN()
+    const newArray = new BAN(this.numberArray, {
+      mantissa: this.mantissa
+    })
+    
+    newArray.mantissa *= number
+    
+    if (newArray.mantissa > 10) {
+      const mantissaOoM
+      newArray.numberArray[1] += 
+    }
+    
+    return newArray
   }
 }
