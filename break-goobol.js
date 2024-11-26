@@ -27,12 +27,12 @@ class BAN {
     if (entryCount === 1) return this.numberArray[0].toString()
     
     if (entryCount === 2) {
-      return (this.numberArray[0] ** this.numberArray[1]).toString()
+      return `${this.mantissa}e${this.numberArray[1]}`
     }
   }
   
   mul(multiplier) {
-    const newArray = new BAN(this.numberArray, {
+    const newArray = new BAN([...this.numberArray], {
       mantissa: this.mantissa
     })
         
@@ -43,8 +43,10 @@ class BAN {
     }*/
     
     
-    const multiplierOom = Math.floor(Math.log10(this.mantissa))
-    newArray.mantissa *= number
+    const multiplierOom = Math.floor(Math.log10(multiplier))
+    newArray.numberArray[1] += multiplierOom
+    
+    newArray.mantissa *= multiplier / 10 ** multiplierOom
     newArray.normalizeMantissa()
     
     return newArray
