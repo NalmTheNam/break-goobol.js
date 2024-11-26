@@ -31,7 +31,7 @@ class BAN {
     }
     
     if (entryCount === 2) {
-      if (options?.notation === "plain" || this.magnitude < 308) {
+      if (options?.notation === "plain" && this.magnitude < 308) {
         const number = 10 ** this.magnitude * this.mantissa
         return new Intl.NumberFormat('en', { 
           maximumFractionDigits: 0
