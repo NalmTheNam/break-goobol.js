@@ -25,8 +25,9 @@ class BAN {
     const entryCount = this.numberArray.length
     
     if (entryCount === 1) {
-      if (this.numberArray[0] < 1000) return this.numberArray[0].toFixed(2)
-      if (this.numberArray[0] < 1e6) return this.numberArray[0]
+      return new Intl.NumberFormat('en', { 
+        maximumFractionDigits: this.numberArray[0] < 100 ? 2 : 0 
+      }).format(this.numberArray[0])
     }
     
     if (entryCount === 2) {
