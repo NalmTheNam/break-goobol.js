@@ -21,7 +21,7 @@ class BAN {
     this.numberArray = [number]
   }
   
-  toString() {
+  toString(options) {
     const entryCount = this.numberArray.length
     
     if (entryCount === 1) {
@@ -31,7 +31,14 @@ class BAN {
     }
     
     if (entryCount === 2) {
-      return `${this.mantissa.toFixed(2)}e${this.numberArray[1]}`
+      if (options?.notation === "plain" || this.magnitude < 308) {
+        const number = 10 ** this.magnitude * this.mantissa
+        return new Intl.NumberFormat('en', { 
+          maximumFractionDigits: 0
+        }).format(number) 
+      }
+      
+      return `${this.mantissa.toFixed(2)}e${this.magnitude}`
     }
   }
   

@@ -5,7 +5,7 @@ const startButton = document.querySelector(".start")
 
 startButton.addEventListener("click", () => {
   setInterval(() => {
-    numberText.textContent = numberArray.toString()
+    numberText.textContent = numberArray.toString({ notation: "plain" })
     numberArray = numberArray.mul((numberArray.magnitude / 50) + 1.01)
   }, 50)
 }, { once: true })
