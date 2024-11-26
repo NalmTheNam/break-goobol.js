@@ -36,16 +36,12 @@ class BAN {
       mantissa: this.mantissa
     })
     
-    if (newArray.numberArray.length === 1) {
+    if (typeof multiplier == "string")
+      multiplier = BAN.parseNumber(multiplier)
+    
+    if (newArray.numberArray.length === 1 && !(multiplier instanceof BAN)) {
       newArray.numberArray[0] *= multiplier
-      
-      if (newArray.numberArray[0] > 9e15) { 
-        const magnitude = Math.floor(Math.log10(newArray.numberArray[0]))
-        const mantissa = newArray.numberArray[0] / 10 ** magnitude
-        
-        newArray.setMantissa(mantissa)
-        newArray.numberArray[1] = magnitude
-      }
+      newArray.normalizeArray()
       
       return newArray
     }
@@ -80,6 +76,18 @@ class BAN {
     }
   }
   
+  normalizeArray() {
+    if (this.numberArray[0] > 9e15) { 
+      const magnitude = Math.floor(Math.log10(this.numberArray[0]))
+      const mantissa = this.numberArray[0] / 10 ** magnitude
+        
+      this.setMantissa(mantissa)
+        
+      this.numberArray[0] = 10
+      this.numberArray[1] = magnitude
+    }
+  }
+  
   static parseNumber(numberString) { 
     if (typeof numberString == "number") return numberString
     
@@ -100,5 +108,9 @@ class BAN {
     
     newArray.normalizeMantissa()
     return newArray
+  }
+  
+  get magnitude() {
+    return this.numberArray[1]
   }
 }
