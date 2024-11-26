@@ -31,7 +31,7 @@ class BAN {
     }
   }
   
-  mul(number) {
+  mul(multiplier) {
     const newArray = new BAN(this.numberArray, {
       mantissa: this.mantissa
     })
@@ -43,6 +43,7 @@ class BAN {
     }*/
     
     
+    const multiplierOom = Math.floor(Math.log10(this.mantissa))
     newArray.mantissa *= number
     newArray.normalizeMantissa()
     
