@@ -24,10 +24,10 @@ class BAN {
   toString() {
     const entryCount = this.numberArray.length
     
-    if (entryCount === 1) return this.numberArray[0].toString()
+    if (entryCount === 1) return this.numberArray[0].toFixed(2)
     
     if (entryCount === 2) {
-      return `${this.mantissa}e${this.numberArray[1]}`
+      return `${this.mantissa.toFixed(2)}e${this.numberArray[1]}`
     }
   }
   
