@@ -111,6 +111,6 @@ class BAN {
   }
   
   get magnitude() {
-    return this.numberArray[1]
+    return this.numberArray[1] ?? Math.floor(Math.log10(this.numberArray[0]))
   }
 }
