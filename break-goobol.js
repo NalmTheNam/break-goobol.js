@@ -35,6 +35,20 @@ class BAN {
     const newArray = new BAN([...this.numberArray], {
       mantissa: this.mantissa
     })
+    
+    if (newArray.numberArray.length === 1) {
+      newArray.numberArray[0] *= multiplier
+      
+      if (newArray.numberArray[0] > 9e15) { 
+        const magnitude = Math.floor(Math.log10(newArray.numberArray[0]))
+        const mantissa = newArray.numberArray[0] / 10 ** magnitude
+        
+        newArray.setMantissa(mantissa)
+        newArray.numberArray[1] = magnitude
+      }
+      
+      return newArray
+    }
         
     /*
     if (typeof number == "string") {
@@ -43,13 +57,18 @@ class BAN {
     }*/
     
     
-    const multiplierOom = Math.floor(Math.log10(multiplier))
-    newArray.numberArray[1] += multiplierOom
+    const multOom = Math.floor(Math.log10(multiplier))
+    const multSignificand = multiplier / 10 ** multOom
     
-    newArray.mantissa *= multiplier / 10 ** multiplierOom
-    newArray.normalizeMantissa()
+    newArray.numberArray[1] += multOom
+    newArray.setMantissa(newArray.mantissa * multSignificand)
     
     return newArray
+  }
+  
+  setMantissa(mantissa) {
+    this.mantissa = mantissa
+    this.normalizeMantissa()
   }
   
   normalizeMantissa() {
