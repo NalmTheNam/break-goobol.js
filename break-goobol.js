@@ -24,7 +24,10 @@ class BAN {
   toString() {
     const entryCount = this.numberArray.length
     
-    if (entryCount === 1) return this.numberArray[0].toFixed(2)
+    if (entryCount === 1) {
+      if (this.numberArray[0] < 1000) return this.numberArray[0].toFixed(2)
+      if (this.numberArray[0] < 1e6) return this.numberArray[0]
+    }
     
     if (entryCount === 2) {
       return `${this.mantissa.toFixed(2)}e${this.numberArray[1]}`
