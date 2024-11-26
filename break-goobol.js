@@ -36,10 +36,12 @@ class BAN {
       mantissa: this.mantissa
     })
         
+    /*
     if (typeof number == "string") {
       const result = BAN.parseNumber(number)
       return result
-    }
+    }*/
+    
     
     newArray.mantissa *= number
     newArray.normalizeMantissa()
