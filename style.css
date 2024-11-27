@@ -10,5 +10,5 @@ body {
 
 .plain-notation-number {
   margin-top: 0.25em;
-  overflow: visible;
+  overflow-wrap: break-word;
 }
