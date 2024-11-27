@@ -1,9 +1,13 @@
 class BAN {
-  constructor(numberOrArray = [0], options = {}) {
+  constructor(number, options) {
+    if (typeof number == "string") {
+      
+    }
+    
     this.mantissa = options?.mantissa ?? 1
     
-    if (numberOrArray instanceof Array) {
-      this.numberArray = numberOrArray
+    if (number instanceof Array) {
+      this.numberArray = number
       
       // Rule 2 of BAN: If the last entry is 1, it can be removed
       
@@ -17,7 +21,6 @@ class BAN {
       return this
     }
     
-    const number = numberOrArray
     this.numberArray = [number]
   }
   
@@ -47,7 +50,7 @@ class BAN {
     }
     
     if (entryCount === 2) {
-      if (options?.notation !== "mixed-scientific" && this.magnitude < 308) {
+      if (options?.notation !== "mixed-scientific" && options?.notation !== "scientific") {
         const number = 10 ** this.magnitude * this.mantissa
         return new Intl.NumberFormat('en', { 
           maximumFractionDigits: 0,
