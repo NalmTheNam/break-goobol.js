@@ -62,11 +62,14 @@ class BAN {
     if (newArray.numberArray.length === 1) {
       newArray.numberArray[0] += number
       newArray.normalizeArray()
-    
-      return newArray
+    } else if (newArray.numberArray.length === 2) {
+      const addedMantissa = number / 10 ** newArray.magnitude
+      const e = Math.log10(addedMantissa)
+      
+      newArray.numberArray[1] += e
     }
     
-    newArray.numberArray[1] += number
+    return newArray
   }
   
   mul(multiplier) {
