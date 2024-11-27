@@ -175,7 +175,23 @@ class BAN {
     return newArray
   }
   
+  getMantissa() {
+    if (this.numberArray.length === 1) {
+      const numberOom = Math.floor(Math.log10(this.rawNumber))
+      const numberSignificand = this.rawNumber / 10 ** numberOom
+      
+      return numberSignificand
+    }
+  }
+  
   get magnitude() {
-    return this.numberArray[1] ?? Math.floor(Math.log10(this.numberArray[0]))
+    return this.numberArray[1] ?? Math.floor(Math.log10(this.rawNumber))
+  }
+  
+  get rawNumber() {
+    const entryCount = this.numberArray.length
+    
+    if (entryCount == 1) return this.numberArray[0]
+    return (this.numberArray[0] ** this.numberArray[1])
   }
 }

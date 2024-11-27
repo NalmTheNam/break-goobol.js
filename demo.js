@@ -21,11 +21,8 @@ startButton.addEventListener("click", async () => {
     render()
   }
   
-  let lastDate = Date.now()
-  
-  for (let i = 0; i < 32000 / 50; i++) {
+  for (let i = 0; i < 32000 / 60; i++) {
     await wait(50)
-    console.log(Date.now())
     numberArray = numberArray.mul(1.01)
     render()
   }
