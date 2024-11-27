@@ -1,24 +1,13 @@
 class BAN {
-  constructor(number, options) {/*
-    if (typeof number == "string") {
-      number = BAN.parseNumber(number)
+  constructor(value = 0, options) {
+    if (typeof value == "string") {
+      const parsedNumber = BAN.parseNumberFromString(value)
+      this.numberArray
+    } else if (typeof value == "number") {
+      this.numberArray = [value]
+    } else if (value instanceof Array) {
+      this.numberArray = value
     }
-    */
-    
-    this.mantissa = options?.mantissa ?? 1
-    
-    if (number instanceof Array) {
-      this.numberArray = number
-      
-      // Rule 2 of BAN: If the last entry is 1, it can be removed
-      
-      /*
-      const entryCount = this.numberArray.length
-      
-      const lastEntry = this.numberArray[entryCount - 1]
-      if (lastEntry === 1) this.numberArray.pop()
-      */
-    } else this.numberArray = [number]
     
     this.normalizeArray()
   }
@@ -125,7 +114,7 @@ class BAN {
     if (lastEntry === 1) this.numberArray.pop()
   }
   
-  static parseNumber(numberString) { 
+  static parseNumberFromString(numberString) { 
     if (typeof numberString == "number") return numberString
     
     const parsedNumber = Number(numberString)
