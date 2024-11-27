@@ -100,7 +100,7 @@ class BAN {
   }
   
   normalizeArray() {
-    if (!this.numberArray[0]) this.numberArray[0] = 10
+    if (this.numberArray[0] == null) this.numberArray[0] = 10
     
     if (this.numberArray[0] > 9e15 && this.numberArray.length < 2) { 
       const magnitude = Math.floor(Math.log10(this.numberArray[0]))
