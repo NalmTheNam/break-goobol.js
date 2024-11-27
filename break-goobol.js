@@ -59,7 +59,9 @@ class BAN {
   }
   
   add(number) {
-    const newArray = new BAN([...this.numberArray])
+    const newArray = new BAN([...this.numberArray], {
+      mantissa: this.mantissa
+    })
     
     if (newArray.numberArray.length === 1) {
       newArray.numberArray[0] += number
