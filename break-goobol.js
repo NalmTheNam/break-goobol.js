@@ -54,6 +54,17 @@ class BAN {
     }
   }
   
+  add(number) {
+    const newArray = new BAN([...this.numberArray], {
+      mantissa: this.mantissa
+    })
+    
+    newArray.numberArray[0] += number
+    newArray.normalizeArray()
+    
+    return newArray
+  }
+  
   mul(multiplier) {
     const newArray = new BAN([...this.numberArray], {
       mantissa: this.mantissa
@@ -116,7 +127,7 @@ class BAN {
     const entryCount = this.numberArray.length
       
     const lastEntry = this.numberArray[entryCount - 1]
-    if (lastEntry === 1) this.numberArray.pop()
+    if (lastEntry === 1 && entryCount > 1) this.numberArray.pop()
   }
   
   setupArrayFromString(string) {

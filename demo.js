@@ -9,13 +9,27 @@ startButton.addEventListener("click", async () => {
   if (music.readyState == HTMLMediaElement.HAVE_ENOUGH_DATA) await waitUntil(() => music.readyState == HTMLMediaElement.HAVE_ENOUGH_DATA)
   music.play()
   
-  setInterval(() => {
-    numberText.textContent = numberArray.toString()
-    plainNumberText.textContent = `Plain number: ${numberArray.toString({ notation: "plain" })}`
-    
-    numberArray = numberArray.mul((numberArray.magnitude / 50) + 1.01)
-  }, 50)
+  for (let i = 0; i < 8; i++) {
+    await wait(1000)
+    numberArray = numberArray.add(1)
+    render()
+  }
+  
+  for (let i = 0; i < 50; i++) {
+    await wait(100)
+    numberArray = numberArray.add(1)
+    render()
+  }
 }, { once: true })
+
+function render() {
+  numberText.textContent = numberArray.toString()
+  plainNumberText.textContent = `Plain number: ${numberArray.toString({ notation: "plain" })}`
+}
+
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
 
 function waitUntil(predicate, interval = 100) {
   const poll = resolve => predicate() ? resolve() : setTimeout(() => poll(resolve), interval)
