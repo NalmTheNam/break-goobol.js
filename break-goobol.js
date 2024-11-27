@@ -23,13 +23,19 @@ class BAN {
   
   toString(options) {
     const entryCount = this.numberArray.length
-    const illions = {
-      1: ["M"]
+    const illionPrefixes = {
+      "0-to-33-OoM": ["m", "b", "tr", "quadr", "quint", "sext", "sept", "oct", "non", "dec"],
+      "prefixes-after-decillion": ["un", "duo", "tre", "quattour", "quin", "sex", "septen", "octo", "novem"]
+    }
+    
+    function convertNumberToIllion() {
+      
     }
     
     if (entryCount === 1) {
       return new Intl.NumberFormat('en', { 
-        maximumFractionDigits: this.numberArray[0] < 100 ? 2 : 0 
+        maximumFractionDigits: this.numberArray[0] < 100 ? 2 : 0,
+        notation: "compact"
       }).format(this.numberArray[0])
     }
     
