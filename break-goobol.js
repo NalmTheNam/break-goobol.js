@@ -1,14 +1,16 @@
 class BAN {
+  numberArray = []
+  
   constructor(value = 0, options) {
     if (typeof value == "string") {
-      const parsedNumber = BAN.parseNumberFromString(value)
-      this.numberArray
+      this.setupArrayFromString(value)
     } else if (typeof value == "number") {
-      this.numberArray = [value]
+      this.numberArray[0] = value
     } else if (value instanceof Array) {
       this.numberArray = value
     }
     
+    thi
     this.normalizeArray()
   }
   
@@ -52,6 +54,7 @@ class BAN {
   }
   
   mul(multiplier) {
+    debugger;
     const newArray = new BAN([...this.numberArray], {
       mantissa: this.mantissa
     })
@@ -97,7 +100,9 @@ class BAN {
   }
   
   normalizeArray() {
-    if (this.numberArray[0] > 9e15) { 
+    if (!this.numberArray[0]) this.numberArray[0] = 10
+    
+    if (this.numberArray[0] > 9e15 && this.numberArray.length < 2) { 
       const magnitude = Math.floor(Math.log10(this.numberArray[0]))
       const mantissa = this.numberArray[0] / 10 ** magnitude
         
@@ -112,6 +117,29 @@ class BAN {
       
     const lastEntry = this.numberArray[entryCount - 1]
     if (lastEntry === 1) this.numberArray.pop()
+  }
+  
+  setupArrayFromString(string) {
+    const parsedNumber = Number(string)
+    if (parsedNumber !== Number.POSITIVE_INFINITY && !Number.isNaN(parsedNumber)) {
+      this.numberArray = [parsedNumber]
+      return
+    }
+      
+    const numberHasENotation = string.includes("e")
+    if (!numberHasENotation) throw new Error("BAN Error: The parsed number is either infinite or not a number. Parsed number: " + parsedNumber)
+    
+    const [mantissa, magnitude] = string.split("e")
+    
+    const parsedMantissa = Number(mantissa)
+    const parsedMagnitude = Number(magnitude)
+    
+    this.mantissa = parsedMantissa
+    
+    this.numberArray[0] = 10
+    this.numberArray[1] = parsedMagnitude
+    
+    this.normalizeMantissa()
   }
   
   static parseNumberFromString(numberString) { 
