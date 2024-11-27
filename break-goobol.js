@@ -1,8 +1,9 @@
 class BAN {
-  constructor(number, options) {
+  constructor(number, options) {/*
     if (typeof number == "string") {
       number = BAN.parseNumber(number)
     }
+    */
     
     this.mantissa = options?.mantissa ?? 1
     
@@ -17,11 +18,9 @@ class BAN {
       const lastEntry = this.numberArray[entryCount - 1]
       if (lastEntry === 1) this.numberArray.pop()
       */
-      
-      return this
-    }
+    } else this.numberArray = [number]
     
-    this.numberArray = [number]
+    this.normalizeArray()
   }
   
   toString(options = { notation: "mixed-scientific" }) {
@@ -118,6 +117,12 @@ class BAN {
       this.numberArray[0] = 10
       this.numberArray[1] = magnitude
     }
+    
+    // Rule 2 of BAN: If the last entry is 1, it can be removed
+    const entryCount = this.numberArray.length
+      
+    const lastEntry = this.numberArray[entryCount - 1]
+    if (lastEntry === 1) this.numberArray.pop()
   }
   
   static parseNumber(numberString) { 
