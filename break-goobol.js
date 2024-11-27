@@ -176,11 +176,16 @@ class BAN {
   }
   
   getMantissa() {
-    if (this.numberArray.length === 1) {
+    if (this.numberArray.length == 1) {
       const numberOom = Math.floor(Math.log10(this.rawNumber))
       const numberSignificand = this.rawNumber / 10 ** numberOom
       
       return numberSignificand
+    }
+    
+    if (this.numberArray.length == 2) {
+      const mantissa = 10 ** (this.magnitude - Math.floor(this.magnitude))
+      
     }
   }
   
@@ -192,6 +197,6 @@ class BAN {
     const entryCount = this.numberArray.length
     
     if (entryCount == 1) return this.numberArray[0]
-    return (this.numberArray[0] ** this.numberArray[1])
+    return (10 ** this.numberArray[1] * this.mantissa)
   }
 }
