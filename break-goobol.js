@@ -1,7 +1,7 @@
 class BAN {
   constructor(number, options) {
     if (typeof number == "string") {
-      
+      number = BAN.parseNumber(number)
     }
     
     this.mantissa = options?.mantissa ?? 1
