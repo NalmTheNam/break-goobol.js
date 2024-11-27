@@ -23,6 +23,9 @@ class BAN {
   
   toString(options) {
     const entryCount = this.numberArray.length
+    const illions = {
+      1: ["M"]
+    }
     
     if (entryCount === 1) {
       return new Intl.NumberFormat('en', { 
