@@ -10,7 +10,8 @@ class BAN {
       this.numberArray = value
     }
     
-    thi
+    this.mantissa = this.mantissa ?? options?.mantissa ?? 1
+    this.normalizeMantissa()
     this.normalizeArray()
   }
   
@@ -54,7 +55,6 @@ class BAN {
   }
   
   mul(multiplier) {
-    debugger;
     const newArray = new BAN([...this.numberArray], {
       mantissa: this.mantissa
     })

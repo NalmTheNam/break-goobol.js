@@ -1,6 +1,6 @@
 const numberText = document.querySelector(".number")
 const plainNumberText = document.querySelector(".plain-notation-number")
-let numberArray = new BAN("1e600")
+let numberArray = new BAN("27e600")
 
 const startButton = document.querySelector(".start")
 
