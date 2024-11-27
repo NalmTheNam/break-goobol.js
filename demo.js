@@ -7,7 +7,7 @@ const startButton = document.querySelector(".start")
 startButton.addEventListener("click", () => {
   setInterval(() => {
     numberText.textContent = numberArray.toString()
-    plainNumberText.textContent = `Without scientific notation: ${numberArray.toString({ notation: "plain" })}`
+    plainNumberText.textContent = `Plain number: ${numberArray.toString({ notation: "plain" })}`
     
     numberArray = numberArray.mul((numberArray.magnitude / 50) + 1.01)
   }, 50)

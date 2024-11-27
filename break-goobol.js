@@ -21,7 +21,7 @@ class BAN {
     this.numberArray = [number]
   }
   
-  toString(options) {
+  toString(options = { notation: "mixed-scientific" }) {
     const entryCount = this.numberArray.length
     const illionPrefixes = {
       "0-to-33-OoM": ["m", "b", "tr", "quadr", "quint", "sext", "sept", "oct", "non", "dec"],
@@ -32,18 +32,27 @@ class BAN {
       
     }
     
+    const getFormatNotation = () => {
+      if (options?.notation === "plain") return "standard"
+      if (options?.notation === "scientific") return "scientific"
+      return "compact"
+    }
+    
     if (entryCount === 1) {
       return new Intl.NumberFormat('en', { 
         maximumFractionDigits: this.numberArray[0] < 100 ? 2 : 0,
-        notation: "compact"
+        notation: getFormatNotation(),
+        compactDisplay: "long"
       }).format(this.numberArray[0])
     }
     
     if (entryCount === 2) {
-      if (options?.notation === "plain" && this.magnitude < 308) {
+      if (options?.notation !== "mixed-scientific" && this.magnitude < 308) {
         const number = 10 ** this.magnitude * this.mantissa
         return new Intl.NumberFormat('en', { 
-          maximumFractionDigits: 0
+          maximumFractionDigits: 0,
+          notation: getFormatNotation(),
+          compactDisplay: "long"
         }).format(number) 
       }
       
