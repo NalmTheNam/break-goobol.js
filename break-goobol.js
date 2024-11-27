@@ -59,10 +59,14 @@ class BAN {
       mantissa: this.mantissa
     })
     
-    newArray.numberArray[0] += number
-    newArray.normalizeArray()
+    if (newArray.numberArray.length === 1) {
+      newArray.numberArray[0] += number
+      newArray.normalizeArray()
     
-    return newArray
+      return newArray
+    }
+    
+    newArray.numberArray[1] += number
   }
   
   mul(multiplier) {
@@ -177,20 +181,20 @@ class BAN {
   
   getMantissa() {
     if (this.numberArray.length == 1) {
-      const numberOom = Math.floor(Math.log10(this.rawNumber))
-      const numberSignificand = this.rawNumber / 10 ** numberOom
+      const magnitude = Math.floor(Math.log10(this.rawNumber))
+      const mantissa = this.rawNumber / 10 ** magnitude
       
-      return numberSignificand
+      return mantissa
     }
     
     if (this.numberArray.length == 2) {
-      const mantissa = 10 ** (this.magnitude - Math.floor(this.magnitude))
-      
+      const mantissa = 10 ** (this.numberArray[1] - this.magnitude)
+      return mantissa
     }
   }
   
   get magnitude() {
-    return this.numberArray[1] ?? Math.floor(Math.log10(this.rawNumber))
+    return Math.floor(this.numberArray[1]) ?? Math.floor(Math.log10(this.rawNumber))
   }
   
   get rawNumber() {
