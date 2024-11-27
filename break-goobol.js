@@ -43,30 +43,33 @@ class BAN {
     if (entryCount === 2) {
       if (options?.notation !== "mixed-scientific" && options?.notation !== "scientific") {
         const number = 10 ** this.magnitude * this.mantissa
+        const newNumber = 10 ** this.magnitude * this.getMantissa()
+        
         return new Intl.NumberFormat('en', { 
           maximumFractionDigits: 0,
           notation: getFormatNotation(),
           compactDisplay: "long"
-        }).format(number) 
+        }).format(options?.new ? newNumber : number) 
       }
+      
+      if (options?.new) return `${this.getMantissa().toFixed(2)}e${this.magnitude}`
       
       return `${this.mantissa.toFixed(2)}e${this.magnitude}`
     }
   }
   
   add(number) {
-    const newArray = new BAN([...this.numberArray], {
-      mantissa: this.mantissa
-    })
+    const newArray = new BAN([...this.numberArray])
     
     if (newArray.numberArray.length === 1) {
       newArray.numberArray[0] += number
       newArray.normalizeArray()
     } else if (newArray.numberArray.length === 2) {
       const addedMantissa = number / 10 ** newArray.magnitude
-      const e = Math.log10(addedMantissa)
+      const addedMagnitude = Math.log10(1 + addedMantissa)
       
-      newArray.numberArray[1] += e
+      newArray.mantissa += addedMantissa
+      newArray.numberArray[1] += addedMagnitude
     }
     
     return newArray
