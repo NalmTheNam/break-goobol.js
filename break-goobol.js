@@ -74,10 +74,11 @@ class BAN {
       const addedMantissa = number / 10 ** newArray.magnitude
       const magnitudeDiff = newArray.numberArray[1] - newArray.magnitude
       
-      const addedMagnitude = Math.log10(addedMantissa - magnitudeDiff + 1)
+      const addedMagnitude = Math.log10(addedMantissa / (magnitudeDiff + 1) + 1)
       
       console.log(`ADDED MANTISSA\tMAGNITUDE DIFFERENCE\tADDED MAGNITUDE
       ${addedMantissa}\t${magnitudeDiff}\t${addedMagnitude}`)
+      
       //newArray.mantissa += addedMantissa
       newArray.numberArray[1] += addedMagnitude
       
