@@ -69,14 +69,19 @@ class BAN {
     } else if (newArray.numberArray.length === 2) {
       const oldMantissa = newArray.getMantissa()
     
-      const addedMantissa = number / 10 ** newArray.magnitude
-      const addedMagnitude = Math.log10(1 + addedMantissa)
+      //const numberPow10 = 10 ** newArray.magnitude
       
+      const addedMantissa = number / 10 ** newArray.magnitude
+      const addedMagnitude = Math.log10(addedMantissa / (newArray.numberArray[1] - newArray.magnitude + 1) + 1)
+      
+      console.log(newArray.numberArray[1] - newArray.magnitude, addedMagnitude)
       //newArray.mantissa += addedMantissa
       newArray.numberArray[1] += addedMagnitude
       
       
       // Fix floating point precision errors
+      
+      /*
       let mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
         
       for (let i = 0; i < 5; i++) {
@@ -84,25 +89,11 @@ class BAN {
         const isDiffNegative = mantissaDiff < 0
         const isDiffPositive = !isDiffNegative
         
-        //if (isDiffPositive) {
-          const removedMagnitude = Math.log10(1 + mantissaDiff)
+        const removedMagnitude = Math.log10(1 + mantissaDiff)
           
-          newArray.numberArray[1] -= removedMagnitude
-          mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
-          //continue
-        //}
-      
-        /*
-        if (isDiffNegative) {
-          const addedMagnitude = Math.log10(1 + mantissaDiff)
-          console.log(mantissaDiff)
-        
-          newArray.numberArray[1] -= removedMagnitude
-          mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
-        
-          console.log(mantissaDiff)
-        }*/
-      }
+        newArray.numberArray[1] -= removedMagnitude
+        mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
+      }*/
     }
     
     return newArray
