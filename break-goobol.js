@@ -67,14 +67,23 @@ class BAN {
       newArray.numberArray[0] += number
       newArray.normalizeArray()
     } else if (newArray.numberArray.length === 2) {
-      const addedMantissa = 1 + number / 10 ** newArray.magnitude
-      const addedMagnitude = Math.log10(addedMantissa)
+      const addedMantissa = number / 10 ** newArray.magnitude
+      const addedMagnitude = Math.log10(1 + addedMantissa)
       
       //newArray.mantissa += addedMantissa
       newArray.numberArray[1] += addedMagnitude
       
       // Fix floating point precision errors
-      const mantissaDiff
+      const mantissaDiff = newArray.getMantissa() - addedMantissa
+      
+      if (mantissaDiff > 1e-9) {
+        const removedMagnitude = Math.log10(mantissaDiff)
+        console.log(mantissaDiff)
+        
+        newArray.numberArray[1] -= removedMagnitude
+        
+        console.log(newArray.getMantissa() - addedMantissa)
+      }
     }
     
     return newArray
