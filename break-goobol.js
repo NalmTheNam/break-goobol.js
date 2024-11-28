@@ -67,6 +67,8 @@ class BAN {
       newArray.numberArray[0] += number
       newArray.normalizeArray()
     } else if (newArray.numberArray.length === 2) {
+      const oldMantissa = newArray.getMantissa()
+    
       const addedMantissa = number / 10 ** newArray.magnitude
       const addedMagnitude = Math.log10(1 + addedMantissa)
       
@@ -74,15 +76,16 @@ class BAN {
       newArray.numberArray[1] += addedMagnitude
       
       // Fix floating point precision errors
-      const mantissaDiff = newArray.getMantissa() - addedMantissa
-      
-      if (mantissaDiff > 1e-9) {
-        const removedMagnitude = Math.log10(mantissaDiff)
-        console.log(mantissaDiff)
+      let mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
+        
+      for (let i = 0; i < 5; i++) {
+        if (mantissaDiff < 1e-9) break
+        
+        const removedMagnitude = Math.log10(1 + mantissaDiff)
+        console.log(mantissaDiff, removedMagnitude)
         
         newArray.numberArray[1] -= removedMagnitude
-        
-        console.log(newArray.getMantissa() - addedMantissa)
+        mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
       }
     }
     
