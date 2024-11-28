@@ -75,6 +75,7 @@ class BAN {
       //newArray.mantissa += addedMantissa
       newArray.numberArray[1] += addedMagnitude
       
+      
       // Fix floating point precision errors
       let mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
         
@@ -83,15 +84,24 @@ class BAN {
         const isDiffNegative = mantissaDiff < 0
         const isDiffPositive = !isDiffNegative
         
-        if (isDiffPositive) {
+        //if (isDiffPositive) {
           const removedMagnitude = Math.log10(1 + mantissaDiff)
+          
+          newArray.numberArray[1] -= removedMagnitude
+          mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
+          //continue
+        //}
+      
+        /*
+        if (isDiffNegative) {
+          const addedMagnitude = Math.log10(1 + mantissaDiff)
           console.log(mantissaDiff)
         
           newArray.numberArray[1] -= removedMagnitude
           mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
         
           console.log(mantissaDiff)
-        }
+        }*/
       }
     }
     
