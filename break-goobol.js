@@ -67,11 +67,14 @@ class BAN {
       newArray.numberArray[0] += number
       newArray.normalizeArray()
     } else if (newArray.numberArray.length === 2) {
-      const addedMantissa = number / 10 ** newArray.magnitude
-      const addedMagnitude = Math.log10(1 + addedMantissa)
+      const addedMantissa = 1 + number / 10 ** newArray.magnitude
+      const addedMagnitude = Math.log10(addedMantissa)
       
-      newArray.mantissa += addedMantissa
+      //newArray.mantissa += addedMantissa
       newArray.numberArray[1] += addedMagnitude
+      
+      // Fix floating point precision errors
+      const mantissaDiff
     }
     
     return newArray
