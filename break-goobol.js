@@ -79,13 +79,19 @@ class BAN {
       let mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
         
       for (let i = 0; i < 5; i++) {
-        if (mantissaDiff < 1e-9) break
+        if (mantissaDiff < 1e-9 && mantissaDiff > -1e-9) break
+        const isDiffNegative = mantissaDiff < 0
+        const isDiffPositive = !isDiffNegative
         
-        const removedMagnitude = Math.log10(1 + mantissaDiff)
-        console.log(mantissaDiff, removedMagnitude)
+        if (isDiffPositive) {
+          const removedMagnitude = Math.log10(1 + mantissaDiff)
+          console.log(mantissaDiff)
         
-        newArray.numberArray[1] -= removedMagnitude
-        mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
+          newArray.numberArray[1] -= removedMagnitude
+          mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
+        
+          console.log(mantissaDiff)
+        }
       }
     }
     
