@@ -8,6 +8,9 @@ class BAN {
       this.numberArray[0] = value
     } else if (value instanceof Array) {
       this.numberArray = value
+    } else if (value instanceof BAN) {
+      this.numberArray = value.numberArray
+      this.mantissa = value.mantissa
     }
     
     this.mantissa = this.mantissa ?? options?.mantissa ?? 1
@@ -59,9 +62,7 @@ class BAN {
   }
   
   add(number) {
-    const newArray = new BAN([...this.numberArray], {
-      mantissa: this.mantissa
-    })
+    const newArray = new BAN(this)
     
     if (newArray.numberArray.length === 1) {
       newArray.numberArray[0] += number
