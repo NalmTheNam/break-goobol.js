@@ -130,9 +130,6 @@ class BAN {
     
     if (entryCount === 1) {
       if (firstEntry instanceof BAN) {
-        // If the first entry is an instance of BAN and the number of entries is 1, 
-        // we set this array's entries to this array's first entry to normalize the array.
-      
         this.arrayEntries = firstEntry.arrayEntries
         this.normalizeArray()
       
@@ -140,9 +137,6 @@ class BAN {
       }
       
       if (firstEntry instanceof Array) {
-        // If the first entry is an Array,
-        // we set this array's entries to this array's first entry to normalize the array.
-      
         this.arrayEntries = firstEntry
         this.normalizeArray()
       
@@ -150,10 +144,10 @@ class BAN {
       }
     }
     
+    if (firstEntry == null) this.arrayEntries[0] = 10
+    
     // Rule 2 of BAN: If the last entry is 1, it can be removed
     if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
-    
-    if (firstEntry == null) this.arrayEntries[0] = 10
     
     if (firstEntry > 9e15 && this.arrayEntries.length < 2) { 
       const magnitude = Math.floor(Math.log10(firstEntry))
