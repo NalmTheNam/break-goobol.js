@@ -169,6 +169,10 @@ class BAN {
     if (lastEntry === 1 && entryCount > 1) this.numberArray.pop()
   }
   
+  getNormalizedArray() {
+    
+  }
+  
   setupArrayFromString(string) {
     const parsedNumber = Number(string)
     if (parsedNumber !== Number.POSITIVE_INFINITY && !Number.isNaN(parsedNumber)) {
