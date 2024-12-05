@@ -158,6 +158,12 @@ class BAN {
       this.arrayEntries[0] = 10
       this.arrayEntries[1] = magnitude
     }
+    
+    for (const entryNumber in this.arrayEntries) {
+      if (this.arrayEntries[entryNumber] > 9e15) {
+        
+      }
+    }
   }
   
   getNormalizedArray() {
