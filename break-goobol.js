@@ -120,24 +120,30 @@ class BAN {
   }
   
   normalizeArray() {
-    // Rule 2 of BAN: If the last entry is 1, it can be removed
     const entryCount = this.arrayEntries.length
-      
-    const lastEntry = this.arrayEntries[entryCount - 1]
-    if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
     
-    if (this.arrayEntries[0] instanceof BAN && entryCount === 1) {
-      this.arrayEntries = this.arrayEntries[0].arrayEntries
+    const firstEntry = this.arrayEntries[0]
+    const lastEntry = this.arrayEntries[entryCount - 1]
+    
+    // If the first entry is an instance of BAN or an Array and the number of entries is 1, 
+    // then we set this array's arrayEntries to the array's first entry
+    
+    const isFirstEntryBAN = firstEntry instanceof BA
+    if (firstEntry instanceof BAN && entryCount === 1) {
+      this.arrayEntries = firstEntry.arrayEntries
       this.normalizeArray()
       
       return
     }
     
-    if (this.arrayEntries[0] == null) this.arrayEntries[0] = 10
+    // Rule 2 of BAN: If the last entry is 1, it can be removed
+    if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
     
-    if (this.arrayEntries[0] > 9e15 && this.arrayEntries.length < 2) { 
-      const magnitude = Math.floor(Math.log10(this.arrayEntries[0]))
-      const mantissa = this.arrayEntries[0] / Math.pow(10, magnitude)
+    if (firstEntry == null) this.arrayEntries[0] = 10
+    
+    if (firstEntry > 9e15 && this.arrayEntries.length < 2) { 
+      const magnitude = Math.floor(Math.log10(firstEntry))
+      const mantissa = firstEntry / Math.pow(10, magnitude)
         
       this.setMantissa(mantissa)
         
