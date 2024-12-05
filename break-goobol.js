@@ -125,13 +125,13 @@ class BAN {
     const firstEntry = this.arrayEntries[0]
     const lastEntry = this.arrayEntries[entryCount - 1]
     
-    // If the first entry is an instance of BAN or an Array and the number of entries is 1, 
-    // then we set this array's arrayEntries to the array's first entry
-    
     const isFirstEntryBAN = firstEntry instanceof BAN
     const isFirstEntryArray = firstEntry instanceof Array
     
     if ((isFirstEntryBAN || isFirstEntryArray) && entryCount === 1) {
+      // If the first entry is an instance of BAN and the number of entries is 1, 
+      // then we set this array's entries to this array's first entry to normalize the array
+      
       this.arrayEntries = firstEntry.arrayEntries
       this.normalizeArray()
       
