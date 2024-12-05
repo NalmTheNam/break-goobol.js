@@ -8,14 +8,26 @@ class BAN {
       this.arrayEntries[0] = value
     } else if (value instanceof Array) {
       this.arrayEntries = value
-    } else if (value instanceof BAN) {
-      this.arrayEntries = structuredClone(value.arrayEntries)
-      this.mantissa = value.mantissa
     }
     
     this.mantissa = this.mantissa ?? 1
     this.normalizeMantissa()
     this.normalizeArray()
+  }
+  
+  clone() {
+    const clonedArray = new BAN()
+    clonedArray.arrayEntries = []
+    
+    for (const entry of this.arrayEntries) {
+      if (entry instanceof BAN) 
+        return clonedArray.arrayEntries.push(entry.clone())
+      
+      clonedArray.arrayEntries.push(entry)
+    }
+    
+    clonedArray.mantissa = this.mantissa
+    return clonedArray
   }
   
   toString(options = {}) {
@@ -61,7 +73,7 @@ class BAN {
   }
   
   add(number) {
-    const newArray = new BAN(this)
+    const newArray = this.clone()
     
     if (newArray.arrayEntries.length === 1) {
       newArray.arrayEntries[0] += number
@@ -75,9 +87,7 @@ class BAN {
   }
   
   mul(multiplier) {
-    const newArray = new BAN([...this.arrayEntries], {
-      mantissa: this.mantissa
-    })
+    const newArray = this.clone()
     
     if (typeof multiplier == "string")
       multiplier = BAN.parseNumber(multiplier)
@@ -127,8 +137,6 @@ class BAN {
     
     const isFirstEntryBAN = firstEntry instanceof BAN
     const isFirstEntryArray = firstEntry instanceof Array
-    
-    debugger;
     
     if (entryCount === 1) {
       if (firstEntry instanceof BAN) {
@@ -188,7 +196,8 @@ class BAN {
   }
   
   getNormalizedArray() {
-    const normalizedArray = new BAN(this)
+    const normalizedArray = this.clone()
+    console.log(normalizedArray)
     normalizedArray.normalizeArray()
     
     return normalizedArray
@@ -238,25 +247,6 @@ class BAN {
     newArray.normalizeMantissa()
     return newArray
   }
-  
-  /*
-  getMantissa() {
-    if (this.arrayEntries.length == 1) {
-      const magnitude = Math.floor(Math.log10(this.rawNumber))
-      const mantissa = this.rawNumber / Math.pow(10, magnitude)
-      
-      return mantissa
-    }
-    
-    if (this.arrayEntries.length == 2) {
-      const mantissa = Math.pow(10, this.arrayEntries[1] - this.magnitude)
-      return mantissa
-    }
-  }
-  
-  setMantissav2(mantissa) {
-    
-  }*/
   
   get magnitude() {
     return Math.floor(this.arrayEntries[1]) ?? Math.floor(Math.log10(this.rawNumber))
