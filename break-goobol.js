@@ -1,7 +1,7 @@
 class BAN {
   numberArray = []
   
-  constructor(value = 0, options) {
+  constructor(value = 0) {
     if (typeof value == "string") {
       this.setupArrayFromString(value)
     } else if (typeof value == "number") {
@@ -13,7 +13,7 @@ class BAN {
       this.mantissa = value.mantissa
     }
     
-    this.mantissa = this.mantissa ?? options?.mantissa ?? 1
+    this.mantissa = this.mantissa ?? 1
     this.normalizeMantissa()
     this.normalizeArray()
   }
@@ -46,18 +46,15 @@ class BAN {
     }
     
     if (entryCount === 2) {
-      if (notation !== "mixed-scientific" && notation !== "scientific") {
-        const number = 10 ** this.magnitude * this.mantissa
-        const newNumber = 10 ** this.magnitude * this.getMantissa()
+      if (notation !== "mixed-scientific" && this.magnitude < 308) {
+        const number = Math.pow(10, this.magnitude * this.mantissa)
         
         return new Intl.NumberFormat('en', { 
           maximumFractionDigits: 0,
           notation: getFormatNotation(),
           compactDisplay: "long"
-        }).format(options?.new ? newNumber : number) 
+        }).format(number) 
       }
-      
-      if (options?.new) return `${this.getMantissa().toFixed(2)}e${this.magnitude}`
       
       return `${this.mantissa.toFixed(2)}e${this.magnitude}`
     }
@@ -71,9 +68,7 @@ class BAN {
       newArray.normalizeArray()
     } else if (newArray.numberArray.length === 2) {
       const addedMantissa = number / Math.pow(10, newArray.magnitude)
-      
-      newArray.mantissa += addedMantissa
-      newArray.normalizeMantissa()
+      newArray.setMantissa(newArray.mantissa + addedMantissa)
     }
     
     return newArray
@@ -116,7 +111,7 @@ class BAN {
   }
   
   normalizeMantissa() {
-    if (this.mantissa >= 10) {
+    if (this.mantissa < 1 || this.mantissa >= 10) {
       const mantissaOom = Math.floor(Math.log10(this.mantissa))
       
       this.numberArray[1] += mantissaOom
@@ -129,7 +124,7 @@ class BAN {
     
     if (this.numberArray[0] > 9e15 && this.numberArray.length < 2) { 
       const magnitude = Math.floor(Math.log10(this.numberArray[0]))
-      const mantissa = this.numberArray[0] / 10 ** magnitude
+      const mantissa = this.numberArray[0] / Math.pow(10, magnitude)
         
       this.setMantissa(mantissa)
         
@@ -193,6 +188,7 @@ class BAN {
     return newArray
   }
   
+  /*
   getMantissa() {
     if (this.numberArray.length == 1) {
       const magnitude = Math.floor(Math.log10(this.rawNumber))
@@ -209,7 +205,7 @@ class BAN {
   
   setMantissav2(mantissa) {
     
-  }
+  }*/
   
   get magnitude() {
     return Math.floor(this.numberArray[1]) ?? Math.floor(Math.log10(this.rawNumber))
