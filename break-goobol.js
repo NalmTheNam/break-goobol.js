@@ -129,7 +129,7 @@ class BAN {
     // then we set this array's arrayEntries to the array's first entry
     
     const isFirstEntryBAN = firstEntry instanceof BAN
-    const i = ""
+    const isFirstEntryArray = 
     
     if (firstEntry instanceof BAN && entryCount === 1) {
       this.arrayEntries = firstEntry.arrayEntries
