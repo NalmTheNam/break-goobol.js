@@ -9,7 +9,7 @@ class BAN {
     } else if (value instanceof Array) {
       this.arrayEntries = value
     } else if (value instanceof BAN) {
-      this.arrayEntries = value.arrayEntries
+      this.arrayEntries = structuredClone(value.arrayEntries)
       this.mantissa = value.mantissa
     }
     
@@ -128,6 +128,8 @@ class BAN {
     const isFirstEntryBAN = firstEntry instanceof BAN
     const isFirstEntryArray = firstEntry instanceof Array
     
+    debugger;
+    
     if (entryCount === 1) {
       if (firstEntry instanceof BAN) {
         this.arrayEntries = firstEntry.arrayEntries
@@ -159,15 +161,37 @@ class BAN {
       this.arrayEntries[1] = magnitude
     }
     
-    for (const entryNumber in this.arrayEntries) {
-      if (this.arrayEntries[entryNumber] > 9e15) {
+    if (this.arrayEntries.length == 2 && this.arrayEntries[1] > 9e15)
+      this.arrayEntries[1] = new BAN(this.arrayEntries[1])
+    
+    if (this.arrayEntries[1] instanceof BAN) return this.arrayEntries[1].normalizeArray()
+    
+    /*
+    for (const entryIdx in this.arrayEntries) {
+      const entryNumber = this.arrayEntries[entryIdx]
+      
+      if (entryNumber > 9e15) {
+        const magnitude = Math.floor(Math.log10(entryNumber))
+        const mantissa = entryNumber / Math.pow(10, magnitude)
         
+        if (entryIdx === this.arrayEntries.length - 1) {
+          this.setMantissa(mantissa)
+        
+          this.arrayEntries[0] = 10
+          this.arrayEntries[1] = magnitude
+          this.arrayEntries[entryIdx]
+          
+          continue
+        }
       }
-    }
+    }*/
   }
   
   getNormalizedArray() {
+    const normalizedArray = new BAN(this)
+    normalizedArray.normalizeArray()
     
+    return normalizedArray
   }
   
   setupArrayFromString(string) {
