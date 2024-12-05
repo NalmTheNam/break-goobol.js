@@ -37,7 +37,7 @@ class BAN {
       return "compact"
     }
     
-    if (entryCount === 1) {
+    if (this.numberArray.length === 1) {
       return new Intl.NumberFormat('en', { 
         maximumFractionDigits: this.numberArray[0] < 100 ? 2 : 0,
         notation: getFormatNotation(),
@@ -45,9 +45,9 @@ class BAN {
       }).format(this.numberArray[0])
     }
     
-    if (entryCount === 2) {
+    if (this.numberArray.length === 2) {
       if (notation !== "mixed-scientific" && this.magnitude < 308) {
-        const number = Math.pow(10, this.magnitude * this.mantissa)
+        const number = Math.pow(10, this.magnitude) * this.mantissa
         
         return new Intl.NumberFormat('en', { 
           maximumFractionDigits: 0,
