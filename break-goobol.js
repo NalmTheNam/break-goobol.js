@@ -1,7 +1,11 @@
 class BAN {
   arrayEntries = []
+  mantissa = 1
+  sign = 0
   
   constructor(value = 0) {
+    if (value === "clone-mode") return this
+    
     if (typeof value == "string") {
       this.setupArrayFromString(value)
     } else if (typeof value == "number") {
@@ -10,14 +14,12 @@ class BAN {
       this.arrayEntries = value
     }
     
-    this.mantissa = this.mantissa ?? 1
     this.normalizeMantissa()
     this.normalizeArray()
   }
   
   clone() {
-    const clonedArray = new BAN()
-    clonedArray.arrayEntries = []
+    const clonedArray = new BAN("clone-mode")
     
     for (const entry of this.arrayEntries) {
       if (entry instanceof BAN) 
@@ -27,6 +29,7 @@ class BAN {
     }
     
     clonedArray.mantissa = this.mantissa
+    console.log(clonedArray)
     return clonedArray
   }
   
