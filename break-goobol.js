@@ -18,7 +18,9 @@ class BAN {
     this.normalizeArray()
   }
   
-  toString(options = { notation: "mixed-scientific" }) {
+  toString(options = {}) {
+    const notation = options?.notation ?? "mixed-scientific"
+    
     const entryCount = this.numberArray.length
     const illionPrefixes = {
       "0-to-33-OoM": ["m", "b", "tr", "quadr", "quint", "sext", "sept", "oct", "non", "dec"],
@@ -30,8 +32,8 @@ class BAN {
     }
     
     const getFormatNotation = () => {
-      if (options?.notation === "plain") return "standard"
-      if (options?.notation === "scientific") return "scientific"
+      if (notation === "plain") return "standard"
+      if (notation === "scientific") return "scientific"
       return "compact"
     }
     
@@ -44,7 +46,7 @@ class BAN {
     }
     
     if (entryCount === 2) {
-      if (options?.notation !== "mixed-scientific" && options?.notation !== "scientific") {
+      if (notation !== "mixed-scientific" && notation !== "scientific") {
         const number = 10 ** this.magnitude * this.mantissa
         const newNumber = 10 ** this.magnitude * this.getMantissa()
         
@@ -68,37 +70,10 @@ class BAN {
       newArray.numberArray[0] += number
       newArray.normalizeArray()
     } else if (newArray.numberArray.length === 2) {
-      const oldMantissa = newArray.getMantissa()
-    
-      //const numberPow10 = 10 ** newArray.magnitude
+      const addedMantissa = number / Math.pow(10, newArray.magnitude)
       
-      const addedMantissa = number / 10 ** newArray.magnitude
-      const magnitudeDiff = newArray.numberArray[1] - newArray.magnitude
-      
-      const addedMagnitude = Math.log10(addedMantissa / (magnitudeDiff + 1) + 1)
-      
-      console.log(`ADDED MANTISSA\tMAGNITUDE DIFFERENCE\tADDED MAGNITUDE
-      ${addedMantissa}\t${magnitudeDiff}\t${addedMagnitude}`)
-      
-      //newArray.mantissa += addedMantissa
-      newArray.numberArray[1] += addedMagnitude
-      
-      
-      // Fix floating point precision errors
-      
-      /*
-      let mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
-        
-      for (let i = 0; i < 5; i++) {
-        if (mantissaDiff < 1e-9 && mantissaDiff > -1e-9) break
-        const isDiffNegative = mantissaDiff < 0
-        const isDiffPositive = !isDiffNegative
-        
-        const removedMagnitude = Math.log10(1 + mantissaDiff)
-          
-        newArray.numberArray[1] -= removedMagnitude
-        mantissaDiff = newArray.getMantissa() - (oldMantissa + addedMantissa)
-      }*/
+      newArray.mantissa += addedMantissa
+      newArray.normalizeMantissa()
     }
     
     return newArray
@@ -221,15 +196,19 @@ class BAN {
   getMantissa() {
     if (this.numberArray.length == 1) {
       const magnitude = Math.floor(Math.log10(this.rawNumber))
-      const mantissa = this.rawNumber / 10 ** magnitude
+      const mantissa = this.rawNumber / Math.pow(10, magnitude)
       
       return mantissa
     }
     
     if (this.numberArray.length == 2) {
-      const mantissa = 10 ** (this.numberArray[1] - this.magnitude)
+      const mantissa = Math.pow(10, this.numberArray[1] - this.magnitude)
       return mantissa
     }
+  }
+  
+  setMantissav2(mantissa) {
+    
   }
   
   get magnitude() {
