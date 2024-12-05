@@ -1,15 +1,15 @@
 class BAN {
-  numberArray = []
+  arrayEntries = []
   
   constructor(value = 0) {
     if (typeof value == "string") {
       this.setupArrayFromString(value)
     } else if (typeof value == "number") {
-      this.numberArray[0] = value
+      this.arrayEntries[0] = value
     } else if (value instanceof Array) {
-      this.numberArray = value
+      this.arrayEntries = value
     } else if (value instanceof BAN) {
-      this.numberArray = value.numberArray
+      this.arrayEntries = value.arrayEntries
       this.mantissa = value.mantissa
     }
     
@@ -21,7 +21,7 @@ class BAN {
   toString(options = {}) {
     const notation = options?.notation ?? "mixed-scientific"
     
-    const entryCount = this.numberArray.length
+    const entryCount = this.arrayEntries.length
     const illionPrefixes = {
       "0-to-33-OoM": ["m", "b", "tr", "quadr", "quint", "sext", "sept", "oct", "non", "dec"],
       "prefixes-after-decillion": ["un", "duo", "tre", "quattour", "quin", "sex", "septen", "octo", "novem"]
@@ -37,15 +37,15 @@ class BAN {
       return "compact"
     }
     
-    if (this.numberArray.length === 1) {
+    if (this.arrayEntries.length === 1) {
       return new Intl.NumberFormat('en', { 
-        maximumFractionDigits: this.numberArray[0] < 100 ? 2 : 0,
+        maximumFractionDigits: this.arrayEntries[0] < 100 ? 2 : 0,
         notation: getFormatNotation(),
         compactDisplay: "long"
-      }).format(this.numberArray[0])
+      }).format(this.arrayEntries[0])
     }
     
-    if (this.numberArray.length === 2) {
+    if (this.arrayEntries.length === 2) {
       if (notation !== "mixed-scientific" && this.magnitude < 308) {
         const number = Math.pow(10, this.magnitude) * this.mantissa
         
@@ -63,10 +63,10 @@ class BAN {
   add(number) {
     const newArray = new BAN(this)
     
-    if (newArray.numberArray.length === 1) {
-      newArray.numberArray[0] += number
+    if (newArray.arrayEntries.length === 1) {
+      newArray.arrayEntries[0] += number
       newArray.normalizeArray()
-    } else if (newArray.numberArray.length === 2) {
+    } else if (newArray.arrayEntries.length === 2) {
       const addedMantissa = number / Math.pow(10, newArray.magnitude)
       newArray.setMantissa(newArray.mantissa + addedMantissa)
     }
@@ -75,15 +75,15 @@ class BAN {
   }
   
   mul(multiplier) {
-    const newArray = new BAN([...this.numberArray], {
+    const newArray = new BAN([...this.arrayEntries], {
       mantissa: this.mantissa
     })
     
     if (typeof multiplier == "string")
       multiplier = BAN.parseNumber(multiplier)
     
-    if (newArray.numberArray.length === 1 && !(multiplier instanceof BAN)) {
-      newArray.numberArray[0] *= multiplier
+    if (newArray.arrayEntries.length === 1 && !(multiplier instanceof BAN)) {
+      newArray.arrayEntries[0] *= multiplier
       newArray.normalizeArray()
       
       return newArray
@@ -99,7 +99,7 @@ class BAN {
     const multOom = Math.floor(Math.log10(multiplier))
     const multSignificand = multiplier / 10 ** multOom
     
-    newArray.numberArray[1] += multOom
+    newArray.arrayEntries[1] += multOom
     newArray.setMantissa(newArray.mantissa * multSignificand)
     
     return newArray
@@ -114,29 +114,36 @@ class BAN {
     if (this.mantissa < 1 || this.mantissa >= 10) {
       const mantissaOom = Math.floor(Math.log10(this.mantissa))
       
-      this.numberArray[1] += mantissaOom
+      this.arrayEntries[1] += mantissaOom
       this.mantissa /= 10 ** mantissaOom
     }
   }
   
   normalizeArray() {
-    if (this.numberArray[0] == null) this.numberArray[0] = 10
+    // Rule 2 of BAN: If the last entry is 1, it can be removed
+    const entryCount = this.arrayEntries.length
+      
+    const lastEntry = this.arrayEntries[entryCount - 1]
+    if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
     
-    if (this.numberArray[0] > 9e15 && this.numberArray.length < 2) { 
-      const magnitude = Math.floor(Math.log10(this.numberArray[0]))
-      const mantissa = this.numberArray[0] / Math.pow(10, magnitude)
+    if (this.arrayEntries[0] instanceof BAN && entryCount === 1) {
+      this.arrayEntries = this.arrayEntries[0].arrayEntries
+      this.normalizeArray()
+      
+      return
+    }
+    
+    if (this.arrayEntries[0] == null) this.arrayEntries[0] = 10
+    
+    if (this.arrayEntries[0] > 9e15 && this.arrayEntries.length < 2) { 
+      const magnitude = Math.floor(Math.log10(this.arrayEntries[0]))
+      const mantissa = this.arrayEntries[0] / Math.pow(10, magnitude)
         
       this.setMantissa(mantissa)
         
-      this.numberArray[0] = 10
-      this.numberArray[1] = magnitude
+      this.arrayEntries[0] = 10
+      this.arrayEntries[1] = magnitude
     }
-    
-    // Rule 2 of BAN: If the last entry is 1, it can be removed
-    const entryCount = this.numberArray.length
-      
-    const lastEntry = this.numberArray[entryCount - 1]
-    if (lastEntry === 1 && entryCount > 1) this.numberArray.pop()
   }
   
   getNormalizedArray() {
@@ -146,7 +153,7 @@ class BAN {
   setupArrayFromString(string) {
     const parsedNumber = Number(string)
     if (parsedNumber !== Number.POSITIVE_INFINITY && !Number.isNaN(parsedNumber)) {
-      this.numberArray = [parsedNumber]
+      this.arrayEntries = [parsedNumber]
       return
     }
       
@@ -160,8 +167,8 @@ class BAN {
     
     this.mantissa = parsedMantissa
     
-    this.numberArray[0] = 10
-    this.numberArray[1] = parsedMagnitude
+    this.arrayEntries[0] = 10
+    this.arrayEntries[1] = parsedMagnitude
     
     this.normalizeMantissa()
   }
@@ -182,7 +189,7 @@ class BAN {
     const parsedMagnitude = Number(magnitude)
     
     newArray.mantissa = parsedMantissa
-    newArray.numberArray[1] = parsedMagnitude
+    newArray.arrayEntries[1] = parsedMagnitude
     
     newArray.normalizeMantissa()
     return newArray
@@ -190,15 +197,15 @@ class BAN {
   
   /*
   getMantissa() {
-    if (this.numberArray.length == 1) {
+    if (this.arrayEntries.length == 1) {
       const magnitude = Math.floor(Math.log10(this.rawNumber))
       const mantissa = this.rawNumber / Math.pow(10, magnitude)
       
       return mantissa
     }
     
-    if (this.numberArray.length == 2) {
-      const mantissa = Math.pow(10, this.numberArray[1] - this.magnitude)
+    if (this.arrayEntries.length == 2) {
+      const mantissa = Math.pow(10, this.arrayEntries[1] - this.magnitude)
       return mantissa
     }
   }
@@ -208,13 +215,13 @@ class BAN {
   }*/
   
   get magnitude() {
-    return Math.floor(this.numberArray[1]) ?? Math.floor(Math.log10(this.rawNumber))
+    return Math.floor(this.arrayEntries[1]) ?? Math.floor(Math.log10(this.rawNumber))
   }
   
   get rawNumber() {
-    const entryCount = this.numberArray.length
+    const entryCount = this.arrayEntries.length
     
-    if (entryCount == 1) return this.numberArray[0]
-    return (10 ** this.numberArray[1] * this.mantissa)
+    if (entryCount == 1) return this.arrayEntries[0]
+    return (10 ** this.arrayEntries[1] * this.mantissa)
   }
 }
