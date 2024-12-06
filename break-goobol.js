@@ -168,14 +168,13 @@ class BAN {
     
     for (const entryNumber in this.arrayEntries) {
       const entry = this.arrayEntries[entryNumber]
+      console.log("ID: " + this.id + " | Entry: " + entry)
       
       if (entry instanceof Array)
         this.arrayEntries[entryNumber] = new BAN(entry)
     }
     
     // Rule 2 of BAN: If the last entry is 1, it can be removed
-    console.log("ID: " + this.id + " | Last entry: " + lastEntry)
-    console.log(this.arrayEntries, lastEntry === 1)
     
     if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
     console.log(this.arrayEntries)
