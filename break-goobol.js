@@ -21,6 +21,8 @@ class BAN {
   clone() {
     const clonedArray = new BAN("clone-mode")
     
+    debugger;
+    
     for (const entry of this.arrayEntries) {
       clonedArray.arrayEntries.push(entry instanceof BAN ? entry.clone() : structuredClone(entry))
     }
@@ -139,6 +141,7 @@ class BAN {
     const isFirstEntryBAN = firstEntry instanceof BAN
     const isFirstEntryArray = firstEntry instanceof Array
     
+    console.log(entryCount, firstEntry, isFirstEntryArray, isFirstEntryBAN, Object.getPrototypeOf(firstEntry))
     if (entryCount === 1) {
       if (firstEntry instanceof BAN) {
         this.arrayEntries = firstEntry.arrayEntries
@@ -198,7 +201,6 @@ class BAN {
   
   getNormalizedArray() {
     const normalizedArray = this.clone()
-    console.log(normalizedArray)
     normalizedArray.normalizeArray()
     
     return normalizedArray
