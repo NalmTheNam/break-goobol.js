@@ -7,7 +7,10 @@ class BAN {
   sign = 0
   
   constructor(value = 0) {
-    if (value === "clone-mode") return this
+    if (value === "clone-mode") {
+      this.debugLogs.push("Clone mode activated.")
+      return this
+    }
     
     if (typeof value == "string") {
       this.setupArrayFromString(value)
@@ -23,7 +26,7 @@ class BAN {
   
   clone() {
     const clonedArray = new BAN("clone-mode")
-    
+    this.debugLogs.push("")
     for (const entry of this.arrayEntries) {
       const isEntryBAN = entry instanceof BAN
       const isEntryArray = entry instanceof Array
