@@ -21,10 +21,16 @@ class BAN {
   clone() {
     const clonedArray = new BAN("clone-mode")
     
-    debugger;
-    
     for (const entry of this.arrayEntries) {
-      clonedArray.arrayEntries.push(entry instanceof BAN ? entry.clone() : structuredClone(entry))
+      const isEntryBAN = entry instanceof BAN
+      const isEntryArray = entry instanceof Array
+      
+      let clonedEntry = entry;
+      
+      if (isEntryBAN) clonedEntry = entry.clone()
+      if (isEntryArray) clonedEntry = [...entry]
+      
+      clonedArray.arrayEntries.push(clonedEntry)
     }
     
     clonedArray.mantissa = this.mantissa
@@ -138,11 +144,10 @@ class BAN {
     const firstEntry = this.arrayEntries[0]
     const lastEntry = this.arrayEntries[entryCount - 1]
     
-    const isFirstEntryBAN = firstEntry instanceof BAN
-    const isFirstEntryArray = firstEntry instanceof Array
-    
-    console.log(entryCount, firstEntry, isFirstEntryArray, isFirstEntryBAN, Object.getPrototypeOf(firstEntry))
     if (entryCount === 1) {
+      const isFirstEntryBAN = firstEntry instanceof BAN
+      const isFirstEntryArray = firstEntry instanceof Array
+           
       if (firstEntry instanceof BAN) {
         this.arrayEntries = firstEntry.arrayEntries
         this.normalizeArray()
@@ -156,6 +161,10 @@ class BAN {
       
         return
       }
+    }
+    
+    for (const entry of this.arrayEntries) {
+      
     }
     
     if (firstEntry == null) this.arrayEntries[0] = 10
