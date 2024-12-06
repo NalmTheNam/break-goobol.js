@@ -22,14 +22,12 @@ class BAN {
     const clonedArray = new BAN("clone-mode")
     
     for (const entry of this.arrayEntries) {
-      if (entry instanceof BAN) 
-        return clonedArray.arrayEntries.push(entry.clone())
-      
-      clonedArray.arrayEntries.push(entry)
+      clonedArray.arrayEntries.push(entry instanceof BAN ? entry.clone() : structuredClone(entry))
     }
     
     clonedArray.mantissa = this.mantissa
-    console.log(clonedArray)
+    clonedArray.sign = this.sign
+    
     return clonedArray
   }
   
