@@ -2,6 +2,7 @@ class BAN {
   arrayEntries = []
   mantissa = 1
   sign = 0
+  id = Math.random()
   
   constructor(value = 0) {
     if (value === "clone-mode") return this
@@ -144,6 +145,8 @@ class BAN {
     const firstEntry = this.arrayEntries[0]
     const lastEntry = this.arrayEntries[entryCount - 1]
     
+    if (firstEntry == null) this.arrayEntries[0] = 10
+    
     if (entryCount === 1) {
       const isFirstEntryBAN = firstEntry instanceof BAN
       const isFirstEntryArray = firstEntry instanceof Array
@@ -163,14 +166,19 @@ class BAN {
       }
     }
     
-    for (const entry of this.arrayEntries) {
+    for (const entryNumber in this.arrayEntries) {
+      const entry = this.arrayEntries[entryNumber]
       
+      if (entry instanceof Array)
+        this.arrayEntries[entryNumber] = new BAN(entry)
     }
     
-    if (firstEntry == null) this.arrayEntries[0] = 10
-    
     // Rule 2 of BAN: If the last entry is 1, it can be removed
+    console.log("ID: " + this.id + " | Last entry: " + lastEntry)
+    console.log(this.arrayEntries, lastEntry === 1)
+    
     if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
+    console.log(this.arrayEntries)
     
     if (firstEntry > 9e15 && this.arrayEntries.length < 2) { 
       const magnitude = Math.floor(Math.log10(firstEntry))
@@ -182,7 +190,7 @@ class BAN {
       this.arrayEntries[1] = magnitude
     }
     
-    if (this.arrayEntries.length == 2 && this.arrayEntries[1] > 9e15)
+    if (this.arrayEntries.length === 2 && this.arrayEntries[1] > 9e15)
       this.arrayEntries[1] = new BAN(this.arrayEntries[1])
     
     if (this.arrayEntries[1] instanceof BAN) return this.arrayEntries[1].normalizeArray()
