@@ -1,8 +1,10 @@
 class BAN {
+  debugLogs = []
+  id = Math.random()
+  
   arrayEntries = []
   mantissa = 1
   sign = 0
-  id = Math.random()
   
   constructor(value = 0) {
     if (value === "clone-mode") return this
