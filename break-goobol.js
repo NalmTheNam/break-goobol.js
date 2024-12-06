@@ -26,7 +26,8 @@ class BAN {
   
   clone() {
     const clonedArray = new BAN("clone-mode")
-    this.debugLogs.push({ type: "info", message: "Cloning" })
+    this.debugLogs.push({ type: "info", message: "Cloning array's contents" })
+    
     for (const entry of this.arrayEntries) {
       const isEntryBAN = entry instanceof BAN
       const isEntryArray = entry instanceof Array
