@@ -13,30 +13,32 @@ class BAN {
   
   constructor(value = 0, options) {
     this.debugName = options?.debugName
+    
     this._cloned = options?.cloned ?? false
+    this._clonedFrom = options?.clonedFrom
     
-    if (value === "clone-mode") {
+    if (this._cloned) {
       this.addDebugLog(`Note: This array is a clone from another array with ID ${this._clonedFrom}.`, { type: "info" })
-    }
+    } else {
+      if (typeof value == "string") {
+        this.setupArrayFromString(value)
+      } else if (typeof value == "number") {
+        this.arrayEntries[0] = value
+      } else if (value instanceof Array) {
+        this.arrayEntries = value
+      }  else if (value instanceof BAN) {
+        this.arrayEntries = value.arrayEntries
+        this.mantissa = value.mantissa
+      }
     
-    if (typeof value == "string") {
-      this.setupArrayFromString(value)
-    } else if (typeof value == "number") {
-      this.arrayEntries[0] = value
-    } else if (value instanceof Array) {
-      this.arrayEntries = value
-    } else if (value instanceof BAN) {
-      this.arrayEntries = value.arrayEntries
-      this.mantissa = value.mantissa
+      this.normalizeMantissa()
+      this.normalizeArray()
     }
-    
-    this.normalizeMantissa()
-    this.normalizeArray()
     
     return new Proxy(this, {
       get(array, prop) {
-        if (typeof prop === "function")
-          this.addDebugLog(`function ${prop}() accessed`)  
+        if (array[prop] === "function" && prop !== "addDebugLog")
+          array.addDebugLog(`function ${prop}() accessed`)  
         
         return Reflect.get(...arguments)
       }
@@ -45,7 +47,7 @@ class BAN {
   
   addDebugLog(message, options) {
     const log = {
-      type: options.type ?? "debug", 
+      type: options?.type ?? "debug", 
       message, 
       date: new Date()
     }
