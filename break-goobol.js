@@ -1,4 +1,5 @@
 class BAN {
+  _cloned = false
   debugLogs = []
   debugName = undefined
   id = Math.random()
@@ -11,7 +12,7 @@ class BAN {
     this.debugName = debugName
     
     if (value === "clone-mode") {
-      this.debugLogs.push({ type: "debug", message: "Clone mode activated."})
+      this.debugLogs.push({ type: "info", message: `Note: This array is a clone from another array called ${this.debugName}.`, time: new Date() })
       return this
     }
     
@@ -31,22 +32,20 @@ class BAN {
   }
   
   printDebugLogs() {
-    console.groupCollapsed(`BAN Debug Logs ID "${this.debugName ?? this.id}"`)
+    console.groupCollapsed(`BAN array debug logs | ID: "${this.debugName ?? this.id}"${this._cloned ? " (Cloned)" : ""}`)
     
     for (const log of this.debugLogs) {
-      const logType = log.type
-      const logMessage = log.message
-      
-      const logTypeMapping = {
-        "verbose": "debug"
-      }
+      console[log.type](`[${log.time}] ${log.message}`)
     }
+    
     console.groupEnd()
   }
   
   clone() {
-    const clonedArray = new BAN("clone-mode")
-    this.debugLogs.push({ type: "info", message: "Cloning array's contents" })
+    const clonedArray = new BAN("clone-mode", this.debugName)
+    clonedArray._cloned = true
+    
+    this.debugLogs.push({ type: "info", message: "Cloning this array's contents to array ID #" + clonedArray.id })
     
     for (const entry of this.arrayEntries) {
       const isEntryBAN = entry instanceof BAN
