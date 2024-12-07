@@ -11,13 +11,13 @@ startButton.addEventListener("click", async () => {
   
   for (let i = 0; i < 8; i++) {
     await wait(1000)
-    numberArray = numberArray.add(1)
+    numberArray.add(1)
     render()
   }
   
   for (let i = 0; i < 68; i++) {
     await wait(100)
-    numberArray = numberArray.add(1)
+    numberArray.add(1)
     render()
   }
   

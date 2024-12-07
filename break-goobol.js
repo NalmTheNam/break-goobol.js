@@ -11,12 +11,12 @@ class BAN {
   mantissa = 1
   sign = 0
   
-  constructor(value = 0, debugName) {
-    this.debugName = debugName
+  constructor(value = 0, options) {
+    this.debugName = options?.debugName
+    this._cloned = options?.cloned ?? false
     
     if (value === "clone-mode") {
       this.addDebugLog(`Note: This array is a clone from another array with ID ${this._clonedFrom}.`, { type: "info" })
-      return this
     }
     
     if (typeof value == "string") {
@@ -35,9 +35,8 @@ class BAN {
     
     return new Proxy(this, {
       get(array, prop) {
-        if (typeof prop === "function") {
-          array.addDebugLog(`function ${prop}() accessed`)  
-        }
+        if (typeof prop === "function")
+          this.addDebugLog(`function ${prop}() accessed`)  
         
         return Reflect.get(...arguments)
       }
@@ -65,10 +64,10 @@ class BAN {
   }
   
   clone() {
-    const clonedArray = new BAN("clone-mode", this.debugName)
-    
-    clonedArray._cloned = true
-    clonedArray._clonedFrom = this.debugName ?? this.id
+    const clonedArray = new BAN("clone-mode", {
+      cloned: true,
+      clonedFrom: this.debugName ?? this.id
+    })
     
     this.addDebugLog("Cloning this array's contents to array ID #" + clonedArray.id, { type: "info" })
     
@@ -133,17 +132,20 @@ class BAN {
   }
   
   add(number) {
-    const newArray = this.clone()
-    
-    if (newArray.arrayEntries.length === 1) {
-      newArray.arrayEntries[0] += number
-      newArray.normalizeArray()
-    } else if (newArray.arrayEntries.length === 2) {
-      const addedMantissa = number / Math.pow(10, newArray.magnitude)
-      newArray.setMantissa(newArray.mantissa + addedMantissa)
+    if (this.arrayEntries.length === 1) {
+      this.arrayEntries[0] += number
+      this.normalizeArray()
+    } else if (this.arrayEntries.length === 2) {
+      const addedMantissa = number / Math.pow(10, this.magnitude)
+      this.setMantissa(this.mantissa + addedMantissa)
     }
+  }
+  
+  added(number) {
+    const clonedArray = this.clone()
+    clonedArray.add(number)
     
-    return newArray
+    return clonedArray
   }
   
   mul(multiplier) {
@@ -218,7 +220,7 @@ class BAN {
     
     for (const entryNumber in this.arrayEntries) {
       const entry = this.arrayEntries[entryNumber]
-      console.log("ID: " + this.id + " | Entry: " + entry)
+      //console.log("ID: " + this.id + " | Entry: " + entry)
       
       if (entry instanceof Array)
         this.arrayEntries[entryNumber] = new BAN(entry)
@@ -227,7 +229,7 @@ class BAN {
     // Rule 2 of BAN: If the last entry is 1, it can be removed
     
     if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
-    console.log(this.arrayEntries)
+    //console.log(this.arrayEntries)
     
     if (firstEntry > 9e15 && this.arrayEntries.length < 2) { 
       const magnitude = Math.floor(Math.log10(firstEntry))
