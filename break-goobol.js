@@ -31,6 +31,7 @@ class BAN {
     this.normalizeArray()
   }
   
+  addDebugLogs
   printDebugLogs() {
     console.groupCollapsed(`BAN array debug logs | ID: "${this.debugName ?? this.id}"${this._cloned ? " (Cloned)" : ""}`)
     
