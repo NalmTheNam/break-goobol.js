@@ -1,14 +1,17 @@
 class BAN {
   debugLogs = []
+  debugName = undefined
   id = Math.random()
   
   arrayEntries = []
   mantissa = 1
   sign = 0
   
-  constructor(value = 0) {
+  constructor(value = 0, debugName) {
+    this.debugName = debugName
+    
     if (value === "clone-mode") {
-      this.debugLogs.push({ type: "verbose", message: "Clone mode activated."})
+      this.debugLogs.push({ type: "debug", message: "Clone mode activated."})
       return this
     }
     
@@ -18,10 +21,27 @@ class BAN {
       this.arrayEntries[0] = value
     } else if (value instanceof Array) {
       this.arrayEntries = value
+    } else if (value instanceof BAN) {
+      this.arrayEntries = value.arrayEntries
+      this.mantissa = value.mantissa
     }
     
     this.normalizeMantissa()
     this.normalizeArray()
+  }
+  
+  printDebugLogs() {
+    console.groupCollapsed(`BAN Debug Logs ID "${this.debugName ?? this.id}"`)
+    
+    for (const log of this.debugLogs) {
+      const logType = log.type
+      const logMessage = log.message
+      
+      const logTypeMapping = {
+        "verbose": "debug"
+      }
+    }
+    console.groupEnd()
   }
   
   clone() {
