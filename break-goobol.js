@@ -206,13 +206,15 @@ class BAN {
     const firstEntry = this.arrayEntries[0]
     const lastEntry = this.arrayEntries[entryCount - 1]
     
-    if (firstEntry == null) this.arrayEntries[0] = 0
+    this.addDebugLog("Entry count: " + entryCount)
     
     if (entryCount === 1) {
       const isFirstEntryBAN = firstEntry instanceof BAN
       const isFirstEntryArray = firstEntry instanceof Array
            
       if (firstEntry instanceof BAN) {
+        this.addDebugLog("The first entry is a BAN array! Setting the array entries to the first entry's array entries...", { type: "info" })
+        
         this.arrayEntries = firstEntry.arrayEntries
         this.normalizeArray()
       
@@ -220,6 +222,9 @@ class BAN {
       }
       
       if (firstEntry instanceof Array) {
+        this.addDebugLog(`The first entry is an array! 
+    Nested arrays will be flattened if there is only 1 entry in the array.`, { type: "warn" })
+        
         this.arrayEntries = firstEntry
         this.normalizeArray()
       
