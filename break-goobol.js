@@ -12,7 +12,7 @@ class BAN {
     this.debugName = debugName
     
     if (value === "clone-mode") {
-      this.debugLogs.push({ type: "info", message: `Note: This array is a clone from another array called ${this.debugName}.`, time: new Date() })
+      this.debugLogs.push({ type: "info", message: `Note: This array is a clone from another array with ID ${this.debugName ?? this.id}.`, time: new Date() })
       return this
     }
     
