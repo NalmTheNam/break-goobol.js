@@ -1,5 +1,8 @@
 class BAN {
+  // Cloning info. This information is mostly used for debugging purposes!
   _cloned = false
+  _clonedFrom = undefined
+  
   debugLogs = []
   debugName = undefined
   id = Math.random()
@@ -12,7 +15,7 @@ class BAN {
     this.debugName = debugName
     
     if (value === "clone-mode") {
-      this.debugLogs.push({ type: "info", message: `Note: This array is a clone from another array with ID ${this.debugName ?? this.id}.`, time: new Date() })
+      this.addDebugLog(`Note: This array is a clone from another array with ID ${this._clonedFrom}.`, { type: "info" })
       return this
     }
     
@@ -31,12 +34,21 @@ class BAN {
     this.normalizeArray()
   }
   
-  addDebugLogs
+  addDebugLog(message, options) {
+    const log = {
+      type: options.type ?? "debug", 
+      message, 
+      date: new Date()
+    }
+    
+    this.debugLogs.push(log)
+  }
+  
   printDebugLogs() {
     console.groupCollapsed(`BAN array debug logs | ID: "${this.debugName ?? this.id}"${this._cloned ? " (Cloned)" : ""}`)
     
     for (const log of this.debugLogs) {
-      console[log.type](`[${log.time}] ${log.message}`)
+      console[log.type](`[${log.date}] ${log.message}`)
     }
     
     console.groupEnd()
@@ -44,9 +56,11 @@ class BAN {
   
   clone() {
     const clonedArray = new BAN("clone-mode", this.debugName)
-    clonedArray._cloned = true
     
-    this.debugLogs.push({ type: "info", message: "Cloning this array's contents to array ID #" + clonedArray.id })
+    clonedArray._cloned = true
+    clonedArray._clonedFrom = this.debugName ?? this.id
+    
+    this.addDebugLog("Cloning this array's contents to array ID #" + clonedArray.id, { type: "info" })
     
     for (const entry of this.arrayEntries) {
       const isEntryBAN = entry instanceof BAN
