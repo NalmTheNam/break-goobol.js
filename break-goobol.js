@@ -223,7 +223,7 @@ class BAN {
       
       if (firstEntry instanceof Array) {
         this.addDebugLog(`The first entry is an array! 
-    Nested arrays will be flattened if there is only 1 entry in the array.`, { type: "warn" })
+Nested arrays will be flattened if there is only 1 entry in the array.`, { type: "warn" })
         
         this.arrayEntries = firstEntry
         this.normalizeArray()
@@ -232,15 +232,16 @@ class BAN {
       }
     }
     
+    this.addDebugLog(`Looping through array entries in order to detect nested arrays to convert them into BAN arrays`, { type: "info" })
+    
     for (const entryNumber in this.arrayEntries) {
       const entry = this.arrayEntries[entryNumber]
-      //console.log("ID: " + this.id + " | Entry: " + entry)
       
-      if (entry instanceof Array)
+      if (entry instanceof Array) {
+        this.addDebugLog(`Entry #${entryNumber} is an array, converting entry into BAN array...`, { type: "warn" })
         this.arrayEntries[entryNumber] = new BAN(entry)
+      }
     }
-    
-    // Rule 2 of BAN: If the last entry is 1, it can be removed
     
     if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
     //console.log(this.arrayEntries)
