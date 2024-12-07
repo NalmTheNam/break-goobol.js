@@ -1,4 +1,6 @@
 class BAN {
+  static devMode = false
+  
   // Cloning info. This information is mostly used for debugging purposes!
   _cloned = false
   _clonedFrom = undefined
@@ -34,6 +36,8 @@ class BAN {
       this.normalizeMantissa()
       this.normalizeArray()
     }
+    
+    if (!BAN.devMode) return this
     
     return new Proxy(this, {
       get(array, propName) {
