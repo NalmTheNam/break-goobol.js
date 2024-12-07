@@ -232,19 +232,18 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
       }
     }
     
-    this.addDebugLog(`Looping through array entries in order to detect nested arrays to convert them into BAN arrays`, { type: "info" })
+    this.addDebugLog(`Looping through array entries in order to detect nested arrays to convert them into BAN arrays...`, { type: "info" })
     
     for (const entryNumber in this.arrayEntries) {
       const entry = this.arrayEntries[entryNumber]
       
       if (entry instanceof Array) {
-        this.addDebugLog(`Entry #${entryNumber} is an array, converting entry into BAN array...`, { type: "warn" })
+        this.addDebugLog(`Entry #${entryNumber} is an array, converting entry into BAN array...`)
         this.arrayEntries[entryNumber] = new BAN(entry)
       }
     }
     
     if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
-    //console.log(this.arrayEntries)
     
     if (firstEntry > 9e15 && this.arrayEntries.length < 2) { 
       const magnitude = Math.floor(Math.log10(firstEntry))
