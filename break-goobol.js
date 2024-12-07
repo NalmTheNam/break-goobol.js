@@ -32,6 +32,16 @@ class BAN {
     
     this.normalizeMantissa()
     this.normalizeArray()
+    
+    return new Proxy(this, {
+      get(array, prop) {
+        if (typeof prop === "function") {
+          array.addDebugLog(`function ${prop}() accessed`)  
+        }
+        
+        return Reflect.get(...arguments)
+      }
+    })
   }
   
   addDebugLog(message, options) {
