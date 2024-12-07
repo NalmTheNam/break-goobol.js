@@ -170,7 +170,7 @@ class BAN {
     const firstEntry = this.arrayEntries[0]
     const lastEntry = this.arrayEntries[entryCount - 1]
     
-    if (firstEntry == null) this.arrayEntries[0] = 10
+    if (firstEntry == null) this.arrayEntries[0] = 0
     
     if (entryCount === 1) {
       const isFirstEntryBAN = firstEntry instanceof BAN
