@@ -36,11 +36,13 @@ class BAN {
     }
     
     return new Proxy(this, {
-      get(array, prop) {
-        if (array[prop] === "function" && prop !== "addDebugLog")
-          array.addDebugLog(`function ${prop}() accessed`)  
+      get(array, propName) {
+        const property = Reflect.get(...arguments)
         
-        return Reflect.get(...arguments)
+        if (typeof property === "function" && propName !== "addDebugLog")
+          array.addDebugLog(`function ${propName}() accessed`)  
+        
+        return property
       }
     })
   }
@@ -67,6 +69,7 @@ class BAN {
   
   clone() {
     const clonedArray = new BAN("clone-mode", {
+      debugName: this.debugName,
       cloned: true,
       clonedFrom: this.debugName ?? this.id
     })
