@@ -1,21 +1,6 @@
 class BAN {
-  static _debugMode = false
+  static debugMode = false
   static _verboseArrays = []
-  
-  static toggleDebugMode() {
-    BAN._debugMode = !BAN._debugMode
-    
-    if (!BAN._debugMode) {
-      for (let array of BAN._verboseArrays) {
-        // Deproxify the array by replacing the old array with a new array
-        array = array.clone()
-      }
-      
-      BAN._verboseArrays = []
-    }
-    
-    console.log("Debug mode turned " + BAN._debugMode ? "on!" : "off!")
-  }
   
   // Cloning info. This information is mostly used for debugging purposes!
   _cloned = false
@@ -53,7 +38,7 @@ class BAN {
       this.normalizeArray()
     }
     
-    if (BAN._debugMode) {
+    if (BAN.debugMode) {
       const verboseArray = new Proxy(this, {
         apply(func, thisArg, args) {
           const returnValue = Reflect.apply(...arguments)
@@ -72,7 +57,6 @@ class BAN {
         }
       })
       
-      BAN._verboseArrays.push(verboseArray)
       return verboseArray
     }
     
@@ -176,6 +160,8 @@ class BAN {
       const addedMantissa = number / Math.pow(10, this.magnitude)
       this.setMantissa(this.mantissa + addedMantissa)
     }
+    
+    return this
   }
   
   added(number) {
