@@ -1,6 +1,6 @@
 class BAN {
   static debugMode = false
-  static _verboseArrays = new Map()
+  static _verboseArrays = new WeakMap()
   
   // Cloning info. This information is mostly used for debugging purposes!
   _cloned = false
@@ -40,6 +40,13 @@ class BAN {
     
     if (BAN.debugMode) {
       const verboseArray = new Proxy(this, {
+        apply(func, thisArg, args) {
+          const returnValue = Reflect.apply(...arguments)
+          if (func.name === "addDebugLog") return returnValue
+          
+          array.addDebugLog(`function ${func.name}() called with arguments`)  
+        },
+        
         get(array, propName) {
           const property = Reflect.get(...arguments)
         
