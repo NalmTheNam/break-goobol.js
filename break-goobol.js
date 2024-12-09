@@ -40,18 +40,17 @@ class BAN {
     
     if (BAN.debugMode) {
       const verboseArray = new Proxy(this, {
-        apply(func, thisArg, args) {
-          const returnValue = Reflect.apply(...arguments)
-          if (func.name === "addDebugLog") return returnValue
-          
-          array.addDebugLog(`function ${func.name}() called with arguments ${args}`)  
-        },
-        
         get(array, propName) {
           const property = Reflect.get(...arguments)
         
-          if (typeof property === "function" && propName !== "addDebugLog")
-            array.addDebugLog(`function ${propName}() accessed`)  
+          if (typeof property === "function" && propName !== "addDebugLog") {
+            return new Proxy(property, {
+              apply(func, thisArg, args) {
+                array.addDebugLog(`function ${func.name}() called with arguments "${args}"`) 
+                return Reflect.apply(...arguments)
+              },
+            })
+          }
         
           return property
         }
