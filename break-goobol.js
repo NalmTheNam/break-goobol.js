@@ -253,7 +253,9 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
       
       if (entry == null) {
         if (entryNumber === 1) this.arrayEntries[entryNumber] = 0
+        else this.arrayEntries[entryNumber] = 1
         
+        continue
       }
       
       if (entry instanceof Array) {
