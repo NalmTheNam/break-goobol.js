@@ -1,6 +1,23 @@
 class BAN {
   static debugMode = false
-  static _verboseArrays = []
+  static getDebugHandler() {
+    return {
+      get(array, propName) {
+        const property = Reflect.get(...arguments)
+        
+        if (typeof property === "function" && propName !== "addDebugLog") {
+          return new Proxy(property, {
+            apply(func, thisArg, args) {
+              array.addDebugLog(`function ${func.name}() called with arguments "${args}"`) 
+              return Reflect.apply(...arguments)
+            },
+          })
+        }
+        
+        return property
+      }
+    }
+  }
   
   // Cloning info. This information is mostly used for debugging purposes!
   _cloned = false
@@ -39,23 +56,7 @@ class BAN {
     }
     
     if (BAN.debugMode) {
-      const verboseArray = new Proxy(this, {
-        get(array, propName) {
-          const property = Reflect.get(...arguments)
-        
-          if (typeof property === "function" && propName !== "addDebugLog") {
-            return new Proxy(property, {
-              apply(func, thisArg, args) {
-                array.addDebugLog(`function ${func.name}() called with arguments "${args}"`) 
-                return Reflect.apply(...arguments)
-              },
-            })
-          }
-        
-          return property
-        }
-      })
-      
+      const verboseArray = new Proxy(this, BAN.getDebugHandler())
       return verboseArray
     }
     
@@ -251,7 +252,7 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
       const entry = this.arrayEntries[entryNumber]
       
       if (entry instanceof Array) {
-        this.addDebugLog(`Entry #${entryNumber} is an array, converting entry into BAN array...`)
+        this.addDebugLog(`Entry #${entryNumber + 1} is an array, converting entry into BAN array...`)
         this.arrayEntries[entryNumber] = new BAN(entry)
       }
     }
