@@ -251,11 +251,17 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     for (const entryNumber in this.arrayEntries) {
       const entry = this.arrayEntries[entryNumber]
       
+      if (entry == null) {
+        if (entryNumber === 1) this.arrayEntries[entryNumber] = 0
+        
+      }
+      
       if (entry instanceof Array) {
-        this.addDebugLog(`Entry #${entryNumber + 1} is an array, converting entry into BAN array...`)
+        this.addDebugLog(`Entry #${Number(entryNumber) + 1} is an array, converting entry into BAN array...`)
         this.arrayEntries[entryNumber] = new BAN(entry)
       }
     }
+    
     
     if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
     
