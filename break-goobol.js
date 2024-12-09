@@ -1,5 +1,6 @@
 class BAN {
-  static devMode = false
+  static debugMode = false
+  static _verboseArrays = new Map()
   
   // Cloning info. This information is mostly used for debugging purposes!
   _cloned = false
@@ -37,18 +38,23 @@ class BAN {
       this.normalizeArray()
     }
     
-    if (!BAN.devMode) return this
+    if (BAN.debugMode) {
+      const verboseArray = new Proxy(this, {
+        get(array, propName) {
+          const property = Reflect.get(...arguments)
+        
+          if (typeof property === "function" && propName !== "addDebugLog")
+            array.addDebugLog(`function ${propName}() accessed`)  
+        
+          return property
+        }
+      })
+      
+      BAN._verboseArrays.set(this, verboseArray)
+      return verboseArray
+    }
     
-    return new Proxy(this, {
-      get(array, propName) {
-        const property = Reflect.get(...arguments)
-        
-        if (typeof property === "function" && propName !== "addDebugLog")
-          array.addDebugLog(`function ${propName}() accessed`)  
-        
-        return property
-      }
-    })
+    return this
   }
   
   addDebugLog(message, options) {
