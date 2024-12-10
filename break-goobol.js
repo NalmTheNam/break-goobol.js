@@ -249,13 +249,13 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     
     this.addDebugLog(`[Normalizer] Looping through array entries in order to normalize them!`, { type: "info" })
     
-    for (const entryNumber in this.arrayEntries) {
-      const entry = this.arrayEntries[entryNumber]
-      const isFirstEntry = entryNumber === 0
+    for (let i = 0; i < this.arrayEntries.length; i++) {
+      const entry = this.arrayEntries[i]
+      const isFirstEntry = i === 0
       
       if (entry == null) {
-        if (isFirstEntry) this.arrayEntries[entryNumber] = 0
-        else this.arrayEntries[entryNumber] = 1
+        if (isFirstEntry) this.arrayEntries[i] = 0
+        else this.arrayEntries[i] = 1
         
         continue
       }
@@ -272,26 +272,19 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
           
           break // Avoid unnecessary normalization because the second entry is guaranteed to not have any problems
         }
+        
+        this.arrayEntries[i] = new BAN(entry)
       }
       
-      if (entry instanceof Array) {
-        this.addDebugLog(`Entry #${Number(entryNumber) + 1} is an array, converting entry into BAN array...`)
-        this.arrayEntries[entryNumber] = new BAN(entry)
+      if (typeof entry === "string" || entry instanceof Array) {
+        this.addDebugLog(`Entry #${i + 1} is an array or a string, converting entry into BAN array...`)
+        this.arrayEntries[i] = new BAN(entry)
+        
+        continue
       }
       
       if (entry instanceof BAN)
         entry.normalizeArray()
-    }
-    
-    
-    if (firstEntry > 9e15 && this.arrayEntries.length < 2) { 
-      const magnitude = Math.floor(Math.log10(firstEntry))
-      const mantissa = firstEntry / Math.pow(10, magnitude)
-        
-      this.setMantissa(mantissa)
-        
-      this.arrayEntries[0] = 10
-      this.arrayEntries[1] = magnitude
     }
     
     if (this.arrayEntries.length === 2 && this.arrayEntries[1] > 9e15)
@@ -326,6 +319,8 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   }
   
   setupArrayFromString(string) {
+    this.addDebugLog("Setting up array from string...", { type: "info" })
+    
     const parsedNumber = Number(string)
     
     if (parsedNumber !== Number.POSITIVE_INFINITY && !Number.isNaN(parsedNumber)) {
