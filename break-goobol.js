@@ -155,12 +155,12 @@ class BAN {
   add(number) {
     if (this.arrayEntries.length === 1) {
       this.arrayEntries[0] += number
-      this.normalizeArray()
     } else if (this.arrayEntries.length === 2) {
       const addedMantissa = number / Math.pow(10, this.magnitude)
       this.setMantissa(this.mantissa + addedMantissa)
     }
     
+    this.normalizeArray()
     return this
   }
   
@@ -221,10 +221,8 @@ class BAN {
     this.addDebugLog("Entry count: " + this.arrayEntries.length)
     this.addDebugLog(`[Normalizer] Looping through array entries in order to normalize them!`, { type: "info" })
     
-          if (this.arrayEntries.length === 1) {
-      this.#normalizeFirstEntry()
-      return
-    }
+    if (this.arrayEntries.length === 1)
+      return this.normalizeFirstEntry()
     
     for (let i = 0; i < this.arrayEntries.length; i++) {
       const entry = this.arrayEntries[i]
@@ -238,18 +236,6 @@ class BAN {
       }
       
       if (entry > Number.MAX_SAFE_INTEGER) {
-        if (isFirstEntry && this.arrayEntries.length === 1) {
-          const magnitude = Math.floor(Math.log10(entry))
-          const mantissa = entry / Math.pow(10, magnitude)
-        
-          this.setMantissa(mantissa)
-        
-          this.arrayEntries[0] = 10
-          this.arrayEntries[1] = magnitude
-          
-          break // Avoid unnecessary normalization because the second entry is guaranteed to not have any problems
-        }
-        
         this.arrayEntries[i] = new BAN(entry)
       }
       
@@ -265,7 +251,7 @@ class BAN {
     }
   }
   
-  #normalizeFirstEntry() {
+  normalizeFirstEntry() {
     const firstEntry = this.arrayEntries[0]
     
     if (firstEntry instanceof BAN) {
@@ -288,8 +274,8 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     }  
     
     if (firstEntry > Number.MAX_SAFE_INTEGER) {
-      const magnitude = Math.floor(Math.log10(entry))
-      const mantissa = entry / Math.pow(10, magnitude)
+      const magnitude = Math.floor(Math.log10(firstEntry))
+      const mantissa = firstEntry / Math.pow(10, magnitude)
         
       this.setMantissa(mantissa)
         
