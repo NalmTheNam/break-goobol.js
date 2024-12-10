@@ -206,6 +206,9 @@ class BAN {
   }
   
   normalizeMantissa() {
+    if (this.mantissa === 0)
+      this.mantissa = 1
+    
     if (this.mantissa < 1 || this.mantissa >= 10) {
       const mantissaOom = Math.floor(Math.log10(this.mantissa))
       
@@ -258,14 +261,17 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
         continue
       }
       
+      if (entry > Number.MAX_SAFE_INTEGER) {
+        
+      }
+      
       if (entry instanceof Array) {
         this.addDebugLog(`Entry #${Number(entryNumber) + 1} is an array, converting entry into BAN array...`)
         this.arrayEntries[entryNumber] = new BAN(entry)
       }
       
-      if (entry instanceof BAN) {
+      if (entry instanceof BAN)
         entry.normalizeArray()
-      }
     }
     
     
@@ -327,8 +333,10 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     const magnitude = magnitudeTowers.join("e")
     
     const parsedMantissa = Number(mantissa)
-    const parsedMagnitude = Number(magnitude)
+    let parsedMagnitude = Number(magnitude)
     
+    if (parsedMagnitude === Number.POSITIVE_INFINITY || Number.isNaN(parsedMagnitude))
+      parsedMagnitude = new BAN(magnitude)
     
     this.setMantissa(parsedMantissa)
     
