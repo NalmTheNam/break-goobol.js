@@ -153,25 +153,32 @@ class BAN {
   }
   
   add(value) {
+    let beyondInfinity = false
+    
+    if (value instanceof BAN)
+      
     if (typeof value == "string") {
       const parsedNumber = Number(value)
       
-      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber))
+      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber)) {
         value = new BAN(value)
-      else 
-        value = parsedNumber
+        beyondInfinity = true
+      } else value = parsedNumber
     }
     
     if (this.arrayEntries.length === 1) {
-      if (value instanceof BAN) {
+      if (typeof value === "number") this.arrayEntries[0] += value
+      else if (value instanceof BAN && value.toNumber() === Number.POSITIVE_INFINITY) {
+        this.arrayEntries[0] = 10
+        this.arrayEntries[1] = value.magnitude
         
+        this.setMantissa(value.mantissa)
       }
-      
-      this.arrayEntries[0] += value
     } else if (this.arrayEntries.length === 2) {
-      
-      const addedMantissa = value / Math.pow(10, this.magnitude)
-      this.setMantissa(this.mantissa + addedMantissa)
+      if (typeof value == "number") {
+        const addedMantissa = value / Math.pow(10, this.magnitude)
+        this.setMantissa(this.mantissa + addedMantissa)
+      }
     }
     
     this.normalizeArray()
@@ -357,17 +364,15 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   }
   
   get magnitude() {
-    return Math.floor(this.arrayEntries[1]) ?? Math.floor(Math.log10(this.rawNumber))
+    return Math.floor(this.arrayEntries[1]) ?? Math.floor(Math.log10(this.toNumber()))
   }
   
   toNumber() {
-    
+    if (this.arrayEntries.length === 1) return this.arrayEntries[0]
+    return Math.pow(this.arrayEntries[0], this.arrayEntries[1]) * this.mantissa
   }
   
-  get rawNumber() {
-    const entryCount = this.arrayEntries.length
-    
-    if (entryCount == 1) return this.arrayEntries[0]
-    return (10 ** this.arrayEntries[1] * this.mantissa)
+  valueOf() {
+    return this.toNumber()
   }
 }
