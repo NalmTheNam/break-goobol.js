@@ -314,6 +314,7 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   
   setupArrayFromString(string) {
     const parsedNumber = Number(string)
+    
     if (parsedNumber !== Number.POSITIVE_INFINITY && !Number.isNaN(parsedNumber)) {
       this.arrayEntries = [parsedNumber]
       return
@@ -322,12 +323,14 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     const numberHasENotation = string.includes("e")
     if (!numberHasENotation) throw new Error("BAN Error: The parsed number is either infinite or not a number. Parsed number: " + parsedNumber)
     
-    const [mantissa, magnitude] = string.split("e")
+    const [mantissa, ...magnitudeTowers] = string.split("e")
+    const magnitude = magnitudeTowers.join("e")
     
     const parsedMantissa = Number(mantissa)
     const parsedMagnitude = Number(magnitude)
     
-    this.mantissa = parsedMantissa
+    
+    this.setMantissa(parsedMantissa)
     
     this.arrayEntries[0] = 10
     this.arrayEntries[1] = parsedMagnitude
