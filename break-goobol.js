@@ -331,8 +331,6 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     
     this.arrayEntries[0] = 10
     this.arrayEntries[1] = parsedMagnitude
-    
-    this.normalizeMantissa()
   }
   
   static parseNumberFromString(numberString) { 
