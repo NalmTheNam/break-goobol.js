@@ -218,36 +218,13 @@ class BAN {
   }
   
   normalizeArray() {
-    const firstEntry = this.arrayEntries[0]
-    const lastEntry = this.arrayEntries[entryCount - 1]
-    
     this.addDebugLog("Entry count: " + this.arrayEntries.length)
-    
-    if (this.arrayEntries.length) {
-      const isFirstEntryBAN = firstEntry instanceof BAN
-      const isFirstEntryArray = firstEntry instanceof Array
-           
-      if (firstEntry instanceof BAN) {
-        this.addDebugLog("The first entry is a BAN array! Setting the array entries to the first entry's array entries...", { type: "info" })
-        
-        this.arrayEntries = firstEntry.arrayEntries
-        this.normalizeArray()
-      
-        return
-      }
-      
-      if (firstEntry instanceof Array) {
-        this.addDebugLog(`The first entry is an array! 
-Nested arrays will be flattened if there is only 1 entry in the array.`, { type: "warn" })
-        
-        this.arrayEntries = firstEntry
-        this.normalizeArray()
-      
-        return
-      }
-    }
-    
     this.addDebugLog(`[Normalizer] Looping through array entries in order to normalize them!`, { type: "info" })
+    
+          if (this.arrayEntries.length === 1) {
+      this.#normalizeFirstEntry()
+      return
+    }
     
     for (let i = 0; i < this.arrayEntries.length; i++) {
       const entry = this.arrayEntries[i]
@@ -286,29 +263,39 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
       if (entry instanceof BAN)
         entry.normalizeArray()
     }
+  }
+  
+  #normalizeFirstEntry() {
+    const firstEntry = this.arrayEntries[0]
     
-    if (this.arrayEntries.length === 2 && this.arrayEntries[1] > 9e15)
-      this.arrayEntries[1] = new BAN(this.arrayEntries[1])
-    
-    /*
-    for (const entryIdx in this.arrayEntries) {
-      const entryNumber = this.arrayEntries[entryIdx]
+    if (firstEntry instanceof BAN) {
+      this.addDebugLog("The first entry is a BAN array! Setting the array entries to the first entry's array entries...", { type: "info" })
+        
+      this.arrayEntries = firstEntry.arrayEntries
+      this.normalizeArray()
       
-      if (entryNumber > 9e15) {
-        const magnitude = Math.floor(Math.log10(entryNumber))
-        const mantissa = entryNumber / Math.pow(10, magnitude)
+      return
+    }
+      
+    if (firstEntry instanceof Array) {
+      this.addDebugLog(`The first entry is an array! 
+Nested arrays will be flattened if there is only 1 entry in the array.`, { type: "warn" })
         
-        if (entryIdx === this.arrayEntries.length - 1) {
-          this.setMantissa(mantissa)
+      this.arrayEntries = entry
+      this.normalizeArray()
+      
+      return
+    }  
+    
+    if (firstEntry > Number.MAX_SAFE_INTEGER) {
+      const magnitude = Math.floor(Math.log10(entry))
+      const mantissa = entry / Math.pow(10, magnitude)
         
-          this.arrayEntries[0] = 10
-          this.arrayEntries[1] = magnitude
-          this.arrayEntries[entryIdx]
-          
-          continue
-        }
-      }
-    }*/
+      this.setMantissa(mantissa)
+        
+      this.arrayEntries[0] = 10
+      this.arrayEntries[1] = magnitude
+    }
   }
   
   getNormalizedArray() {
@@ -319,10 +306,11 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   }
   
   setupArrayFromString(string) {
+    if (typeof string !== "string") return
+    
     this.addDebugLog("Setting up array from string...", { type: "info" })
     
     const parsedNumber = Number(string)
-    
     if (parsedNumber !== Number.POSITIVE_INFINITY && !Number.isNaN(parsedNumber)) {
       this.arrayEntries = [parsedNumber]
       return
