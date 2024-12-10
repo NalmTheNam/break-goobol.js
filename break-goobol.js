@@ -218,14 +218,12 @@ class BAN {
   }
   
   normalizeArray() {
-    const entryCount = this.arrayEntries.length
-    
     const firstEntry = this.arrayEntries[0]
     const lastEntry = this.arrayEntries[entryCount - 1]
     
-    this.addDebugLog("Entry count: " + entryCount)
+    this.addDebugLog("Entry count: " + this.arrayEntries.length)
     
-    if (entryCount === 1) {
+    if (this.arrayEntries.length) {
       const isFirstEntryBAN = firstEntry instanceof BAN
       const isFirstEntryArray = firstEntry instanceof Array
            
@@ -249,20 +247,31 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
       }
     }
     
-    this.addDebugLog(`Looping through array entries in order to detect nested arrays to convert them into BAN arrays...`, { type: "info" })
+    this.addDebugLog(`[Normalizer] Looping through array entries in order to normalize them!`, { type: "info" })
     
     for (const entryNumber in this.arrayEntries) {
       const entry = this.arrayEntries[entryNumber]
+      const isFirstEntry = entryNumber === 0
       
       if (entry == null) {
-        if (entryNumber === 1) this.arrayEntries[entryNumber] = 0
+        if (isFirstEntry) this.arrayEntries[entryNumber] = 0
         else this.arrayEntries[entryNumber] = 1
         
         continue
       }
       
       if (entry > Number.MAX_SAFE_INTEGER) {
+        if (isFirstEntry && this.arrayEntries.length === 1) {
+          const magnitude = Math.floor(Math.log10(entry))
+          const mantissa = entry / Math.pow(10, magnitude)
         
+          this.setMantissa(mantissa)
+        
+          this.arrayEntries[0] = 10
+          this.arrayEntries[1] = magnitude
+          
+          break // Avoid unnecessary normalization because the second entry is guaranteed to not have any problems
+        }
       }
       
       if (entry instanceof Array) {
@@ -274,8 +283,6 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
         entry.normalizeArray()
     }
     
-    
-    if (lastEntry === 1 && entryCount > 1) this.arrayEntries.pop()
     
     if (firstEntry > 9e15 && this.arrayEntries.length < 2) { 
       const magnitude = Math.floor(Math.log10(firstEntry))
