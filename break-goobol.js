@@ -153,22 +153,24 @@ class BAN {
   }
   
   add(value) {
-    let beyondInfinity = false
-    
-    if (value instanceof BAN)
+    if (value instanceof BAN) {
+      const number = value.toNumber()
+      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
+        value = number
+    }
       
     if (typeof value == "string") {
       const parsedNumber = Number(value)
       
-      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber)) {
-        value = new BAN(value)
-        beyondInfinity = true
-      } else value = parsedNumber
+      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber))
+        value = new BAN(value) 
+      else 
+        value = parsedNumber
     }
     
     if (this.arrayEntries.length === 1) {
       if (typeof value === "number") this.arrayEntries[0] += value
-      else if (value instanceof BAN && value.toNumber() === Number.POSITIVE_INFINITY) {
+      else if (value instanceof BAN) {
         this.arrayEntries[0] = 10
         this.arrayEntries[1] = value.magnitude
         
