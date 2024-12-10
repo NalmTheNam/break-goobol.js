@@ -152,11 +152,25 @@ class BAN {
     }
   }
   
-  add(number) {
+  add(value) {
+    if (typeof value == "string") {
+      const parsedNumber = Number(value)
+      
+      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber))
+        value = new BAN(value)
+      else 
+        value = parsedNumber
+    }
+    
     if (this.arrayEntries.length === 1) {
-      this.arrayEntries[0] += number
+      if (value instanceof BAN) {
+        
+      }
+      
+      this.arrayEntries[0] += value
     } else if (this.arrayEntries.length === 2) {
-      const addedMantissa = number / Math.pow(10, this.magnitude)
+      
+      const addedMantissa = value / Math.pow(10, this.magnitude)
       this.setMantissa(this.mantissa + addedMantissa)
     }
     
@@ -344,6 +358,10 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   
   get magnitude() {
     return Math.floor(this.arrayEntries[1]) ?? Math.floor(Math.log10(this.rawNumber))
+  }
+  
+  toNumber() {
+    
   }
   
   get rawNumber() {
