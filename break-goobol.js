@@ -369,6 +369,20 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     return Math.floor(this.arrayEntries[1]) ?? Math.floor(Math.log10(this.toNumber()))
   }
   
+  getMagnitude() {
+    if (this.arrayEntries.length === 1) return Math.floor(Math.log10(this.toNumber()))
+    
+    let magnitude = this.arrayEntries[1]
+    
+    if (magnitude instanceof BAN) {
+      if (magnitude.toNumber() === Number.POSITIVE_INFINITY) {
+        this.arrayEntries[1]
+      } else magnitude = magnitude.toNumber()
+    }
+    
+    return Math.floor(magnitude)
+  }
+  
   toNumber() {
     if (this.arrayEntries.length === 1) return this.arrayEntries[0]
     return Math.pow(this.arrayEntries[0], this.arrayEntries[1]) * this.mantissa
