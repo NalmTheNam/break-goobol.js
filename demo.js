@@ -1,5 +1,3 @@
-BAN.debugMode = true
-
 const numberText = document.querySelector(".number")
 const plainNumberText = document.querySelector(".plain-notation-number")
 let numberArray = new BAN(0)
