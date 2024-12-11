@@ -373,14 +373,24 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     if (this.arrayEntries.length === 1) return Math.floor(Math.log10(this.toNumber()))
     
     let magnitude = this.arrayEntries[1]
-    
-    if (magnitude instanceof BAN) {
-      if (magnitude.toNumber() === Number.POSITIVE_INFINITY) {
-        this.arrayEntries[1]
-      } else magnitude = magnitude.toNumber()
-    }
+    if (magnitude instanceof BAN) 
+      magnitude = magnitude.toNumber()
     
     return Math.floor(magnitude)
+  }
+  
+  getNestingDepth() {
+    const lastEntryNumber = this.arrayEntries.length - 1
+    
+    let nestingDepth = 0
+    let arrayToNest = this
+    
+    while (arrayToNest.arrayEntries[lastEntryNumber] instanceof BAN) {
+      nestingDepth += 1
+      arrayToNest = arrayToNest.arrayEntries[lastEntryNumber]
+    }
+    
+    return nestingDepth
   }
   
   toNumber() {
