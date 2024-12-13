@@ -172,7 +172,7 @@ class BAN {
       if (typeof value === "number") this.arrayEntries[0] += value
       else if (value instanceof BAN) {
         this.arrayEntries[0] = 10
-        this.arrayEntries[1] = value.magnitude
+        this.arrayEntries[1] = value.arrayEntries[1]
         
         this.setMantissa(value.mantissa)
       }
