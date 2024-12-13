@@ -358,10 +358,9 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     const parsedMantissa = Number(mantissa)
     const parsedMagnitude = Number(magnitude)
     
-    newArray.mantissa = parsedMantissa
+    newArray.setMantissa(parsedMantissa)
     newArray.arrayEntries[1] = parsedMagnitude
     
-    newArray.normalizeMantissa()
     return newArray
   }
   
