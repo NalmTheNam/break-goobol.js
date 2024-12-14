@@ -246,7 +246,10 @@ class BAN {
   
   getMantissav2() {
     if (this.arrayEntries.length === 1) return this.numberArray[0] / Math.pow(10, this.getMagnitude())
-    const mantissa = this.getMagnitude()
+    
+    if (this.arrayEntries.length === 2) {
+      const mantissa = this.getMagnitude()
+    }
   }
   
   normalizeMantissav2() {
