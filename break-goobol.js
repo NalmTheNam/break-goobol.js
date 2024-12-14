@@ -240,6 +240,18 @@ class BAN {
     }
   }
   
+  setMantissav2() {
+    
+  }
+  
+  getMantissav2() {
+    
+  }
+  
+  normalizeMantissav2() {
+    
+  }
+  
   normalizeArray() {
     this.addDebugLog("Entry count: " + this.arrayEntries.length)
     this.addDebugLog(`[Normalizer] Looping through array entries in order to normalize them!`, { type: "info" })
