@@ -19,6 +19,10 @@ class BAN {
     }
   }
   
+  static PreciseNumber = class {
+    
+  }
+  
   // Cloning info. This information is mostly used for debugging purposes!
   _cloned = false
   _clonedFrom = undefined
