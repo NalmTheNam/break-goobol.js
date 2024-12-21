@@ -27,12 +27,26 @@ class BAN {
       
       const [normalDigits, decimalDigits] = value.split(".")
       
-      for (let i = normalDigits.length - 1; i >= -decimalDigits?.length ?? 0; i--) {
-        //console.log(i, 0 - i)
+      for (let i = normalDigits.length - 1; i >= (decimalDigits?.length ?? 0); i--) {
         const stringDigit = normalDigits[i] ?? decimalDigits[-i - 1]
         const digit = Number(stringDigit)
         
         this.digits.push([digit, i])
+      }
+    }
+    
+    add(value) {
+      if (typeof value === "number") value = value.toString()
+      
+      const [normalDigits, decimalDigits] = value.split(".")
+      const decimalDigitsLength = decimalDigits?.length ?? 0
+      
+      for (let i = normalDigits.length - 1; i >= decimalDigitsLength; i--) {
+        const stringDigit = normalDigits[i] ?? decimalDigits[-i - 1]
+        const digit = Number(stringDigit)
+        
+        const editedDigit = this.digits.find(([_digit, idx]) => idx === i)
+        editedDigit[0] += digit
       }
     }
   }
