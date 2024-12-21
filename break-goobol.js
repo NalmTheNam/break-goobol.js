@@ -20,7 +20,15 @@ class BAN {
   }
   
   static PreciseNumber = class {
+    digits = []
     
+    constructor(value) {
+      if (typeof value === "number") value = value.toString()
+      
+      const [normalDigits, decimalDigits] = value.split(".")
+      
+      for (let i = normalDigits.length)
+    }
   }
   
   // Cloning info. This information is mostly used for debugging purposes!
