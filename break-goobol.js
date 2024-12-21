@@ -32,30 +32,30 @@ class BAN {
       const decimalDigitsLength = decimalDigits?.length ?? 0
       
       for (let i = integerDigits.length - 1; i >= decimalDigitsLength; i--) {
-        const stringDigit = integerDigits[i] ?? decimalDigits[-i - 1]
-        const digit = Number(stringDigit)
+        const stringDigitValue = integerDigits[i] ?? decimalDigits[-i - 1]
+        const digitValue = Number(stringDigitValue)
         
-        this.digits.push([digit, i])
+        this.digits.push({
+          digitValue, position: i
+        })
       }
     }
     
     add(value) {
-      const preciseNumber = new 
-      if (typeof value === "number") value = value.toString()
+      const addedDigits = new BAN.PreciseNumber(value)
       
-      const digits = value.split(".")
-      const integerDigits = digits[0].split("").reverse().join("")
-      const decimalDigits = digits[1]
-      
-      const decimalDigitsLength = decimalDigits?.length ?? 0
-            
-      for (let i = integerDigits.length - 1; i >= decimalDigitsLength; i--) {
-        const stringDigit = integerDigits[i] ?? decimalDigits[-i - 1]
-        const digit = Number(stringDigit)
+      this.digits = this.digits.map(digit => {
+        const addedDigit = addedDigits.findDigit(digit.position) ?? [0]
         
-        const editedDigit = this.digits.find(([_digit, idx]) => idx === i)
-        editedDigit[0] += digit
-      }
+        digit.digitValue += addedDigit.digitValue
+        return digit
+      })
+      
+      return this
+    }
+    
+    findDigit(positionToLook) {
+      return this.digits.find(([_, position]) => position == positionToLook)
     }
   }
   
