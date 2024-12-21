@@ -31,31 +31,34 @@ class BAN {
       
       const decimalDigitsLength = decimalDigits?.length ?? 0
       
-      for (let i = integerDigits.length - 1; i >= decimalDigitsLength; i--) {
+      for (let i = integerDigits.length - 1; i >= -decimalDigitsLength; i--) {
         const stringDigitValue = integerDigits[i] ?? decimalDigits[-i - 1]
         const digitValue = Number(stringDigitValue)
         
         this.digits.push({
-          digitValue, position: i
+          value: digitValue, position: i
         })
       }
     }
     
     add(value) {
-      const addedDigits = new BAN.PreciseNumber(value)
-      
-      this.digits = this.digits.map(digit => {
-        const addedDigit = addedDigits.findDigit(digit.position) ?? [0]
+      const addend = new BAN.PreciseNumber(value)
+      for (const digitToAdd of addend.digits) {
+        const addedDigit = this.digits.find(digit => digit.position == digitToAdd.position)
         
-        digit.digitValue += addedDigit.digitValue
-        return digit
-      })
+        if (!addedDigit) {
+          this.digits.push({ value: digitToAdd.value, position: digitToAdd.position })
+          continue
+        }
+        
+        addedDigit.value += digitToAdd.value
+      }
       
       return this
     }
     
-    findDigit(positionToLook) {
-      return this.digits.find(([_, position]) => position == positionToLook)
+    toString() {
+      return this.digits.map(digit => (digit.position === -1 ? "." : "") + digit.value).join("")
     }
   }
   
