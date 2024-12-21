@@ -27,7 +27,13 @@ class BAN {
       
       const [normalDigits, decimalDigits] = value.split(".")
       
-      for (let i = normalDigits.length)
+      for (let i = normalDigits.length - 1; i >= -decimalDigits?.length ?? 0; i--) {
+        //console.log(i, 0 - i)
+        const stringDigit = normalDigits[i] ?? decimalDigits[-i - 1]
+        const digit = Number(stringDigit)
+        
+        this.digits.push([digit, i])
+      }
     }
   }
   
