@@ -25,10 +25,14 @@ class BAN {
     constructor(value) {
       if (typeof value === "number") value = value.toString()
       
-      const [normalDigits, decimalDigits] = value.split(".")
+      const digits = value.split(".")
+      const integerDigits = digits[0].split("").reverse().join("") // Reverse the integer digits so that the largest integer digit can be placed into the digits array first.
+      const decimalDigits = digits[1]
       
-      for (let i = normalDigits.length - 1; i >= (decimalDigits?.length ?? 0); i--) {
-        const stringDigit = normalDigits[i] ?? decimalDigits[-i - 1]
+      const decimalDigitsLength = decimalDigits?.length ?? 0
+      
+      for (let i = integerDigits.length - 1; i >= decimalDigitsLength; i--) {
+        const stringDigit = integerDigits[i] ?? decimalDigits[-i - 1]
         const digit = Number(stringDigit)
         
         this.digits.push([digit, i])
@@ -36,13 +40,17 @@ class BAN {
     }
     
     add(value) {
+      const preciseNumber = new 
       if (typeof value === "number") value = value.toString()
       
-      const [normalDigits, decimalDigits] = value.split(".")
-      const decimalDigitsLength = decimalDigits?.length ?? 0
+      const digits = value.split(".")
+      const integerDigits = digits[0].split("").reverse().join("")
+      const decimalDigits = digits[1]
       
-      for (let i = normalDigits.length - 1; i >= decimalDigitsLength; i--) {
-        const stringDigit = normalDigits[i] ?? decimalDigits[-i - 1]
+      const decimalDigitsLength = decimalDigits?.length ?? 0
+            
+      for (let i = integerDigits.length - 1; i >= decimalDigitsLength; i--) {
+        const stringDigit = integerDigits[i] ?? decimalDigits[-i - 1]
         const digit = Number(stringDigit)
         
         const editedDigit = this.digits.find(([_digit, idx]) => idx === i)
