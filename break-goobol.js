@@ -23,7 +23,8 @@ class BAN {
     digits = []
     
     constructor(value) {
-      if (typeof value === "number") value = value.toString().replace("e", "").replace("+", "")
+      if (typeof value === "number") value = value.toString()
+      if (value.includes("e")) {}
       
       const digits = value.split(".")
       const integerDigits = digits[0].split("").reverse().join("") // Reverse the integer digits so that the largest integer digit can be placed into the digits array first.
