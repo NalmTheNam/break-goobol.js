@@ -309,9 +309,19 @@ class BAN {
     return newArray
   }
   
-  pow() {
+  pow(value) {
+    if (this.arrayEntries.length === 1) {
+      if (typeof value == "number") this.arrayEntries[0] **= value
+    } else if (this.arrayEntries.length === 2) {
+      if (typeof value == "number") {
+        this.arrayEntries[1] *= value
+      }
+    }
     
+    this.normalizeArray()
+    return this
   }
+  
   setMantissa(mantissa) {
     this.mantissa = mantissa
     this.normalizeMantissa()
