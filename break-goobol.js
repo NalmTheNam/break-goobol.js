@@ -231,6 +231,41 @@ class BAN {
     return this
   }
   
+  addv2(value) {
+    if (value instanceof BAN) {
+      const number = value.toNumber()
+      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
+        value = number
+    }
+      
+    if (typeof value == "string") {
+      const parsedNumber = Number(value)
+      
+      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber))
+        value = new BAN(value) 
+      else 
+        value = parsedNumber
+    }
+    
+    if (this.arrayEntries.length === 1) {
+      if (typeof value === "number") this.arrayEntries[0] += value
+      else if (value instanceof BAN) {
+        this.arrayEntries[0] = 10
+        this.arrayEntries[1] = value.arrayEntries[1]
+        
+        this.setMantissa(value.mantissa)
+      }
+    } else if (this.arrayEntries.length === 2) {
+      if (typeof value == "number") {
+        const addedMantissa = value / Math.pow(10, this.magnitude)
+        this.setMantissa(this.mantissa + addedMantissa)
+      }
+    }
+    
+    this.normalizeArray()
+    return this
+  }
+  
   added(number) {
     const clonedArray = this.clone()
     clonedArray.add(number)
@@ -289,11 +324,16 @@ class BAN {
   }
   
   getMantissav2() {
-    if (this.arrayEntries.length === 1) return this.numberArray[0] / Math.pow(10, this.getMagnitude())
+    let mantissa = 0
+    
+    if (this.arrayEntries.length === 1) mantissa = this.numberArray[0] / Math.pow(10, this.getMagnitude())
     
     if (this.arrayEntries.length === 2) {
-      const mantissa = this.getMagnitude()
+      const magnitude = this.getMagnitude()
+      mantissa = Math.pow(10, magnitude - Math.floor(magnitude))
     }
+    
+    return mantissa
   }
   
   normalizeMantissav2() {
@@ -431,7 +471,7 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   getMagnitude() {
     if (this.arrayEntries.length === 1) return Math.floor(Math.log10(this.toNumber()))
     
-    let magnitude = this.arrayEntries[1]
+    const magnitude = this.arrayEntries[1]
     if (magnitude instanceof BAN) 
       magnitude = magnitude.toNumber()
     
