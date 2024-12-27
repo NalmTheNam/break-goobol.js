@@ -239,10 +239,16 @@ class BAN {
     }
       
     if (typeof value == "string") {
+      const digits = value.split(".")
+      const fractionalDigits = digits[1]
+      
+      if (fractionalDigits && fractionalDigits.length > 15)
+        value = new BAN.PreciseNumber(value)
+      
       const parsedNumber = Number(value)
       
       if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber))
-        value = new BAN(value) 
+        value = new BAN(value)
       else 
         value = parsedNumber
     }
