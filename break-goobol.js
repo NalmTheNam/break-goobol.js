@@ -256,8 +256,9 @@ class BAN {
     if (this.arrayEntries.length === 1) {
       if (typeof value === "number") this.arrayEntries[0] += value
       else if (value instanceof BAN) {
-        this.arrayEntries[0] = 10
-        this.arrayEntries[1] = value.arrayEntries[1]
+        this.arrayEntries = []
+        for (const entry of value.arrayEntries)
+          this.arrayEntries.push(entry)
         
         this.setMantissa(value.mantissa)
       }
@@ -308,6 +309,9 @@ class BAN {
     return newArray
   }
   
+  pow() {
+    
+  }
   setMantissa(mantissa) {
     this.mantissa = mantissa
     this.normalizeMantissa()
@@ -325,18 +329,18 @@ class BAN {
     }
   }
   
-  setMantissav2() {
-    
+  setMantissav2(value) {
+    const setMagnitude = Math.log10(value)
+    this.numberArray[1] = this.getMagnitude() + setMagnitude
   }
   
   getMantissav2() {
     let mantissa = 0
-    
     if (this.arrayEntries.length === 1) mantissa = this.numberArray[0] / Math.pow(10, this.getMagnitude())
     
     if (this.arrayEntries.length === 2) {
       const magnitude = this.getMagnitude()
-      mantissa = Math.pow(10, magnitude - Math.floor(magnitude))
+      mantissa = Math.pow(10, this.numberArray[1] - Math.floor(magnitude))
     }
     
     return mantissa
@@ -447,27 +451,6 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     
     this.arrayEntries[0] = 10
     this.arrayEntries[1] = parsedMagnitude
-  }
-  
-  static parseNumberFromString(numberString) { 
-    if (typeof numberString == "number") return numberString
-    
-    const parsedNumber = Number(numberString)
-    if (parsedNumber !== Number.POSITIVE_INFINITY && !Number.isNaN(parsedNumber)) return parsedNumber
-      
-    const numberHasENotation = numberString.includes("e")
-    if (!numberHasENotation) throw new Error("BAN Error: The parsed number is either infinite or not a number. Parsed number: " + parsedNumber)
-    
-    let newArray = new BAN(10)
-    const [mantissa, magnitude] = numberString.split("e")
-    
-    const parsedMantissa = Number(mantissa)
-    const parsedMagnitude = Number(magnitude)
-    
-    newArray.setMantissa(parsedMantissa)
-    newArray.arrayEntries[1] = parsedMagnitude
-    
-    return newArray
   }
   
   get magnitude() {
