@@ -180,12 +180,18 @@ class BAN {
   }
   
   toString(options = {}) {
+    const defaultOptions = {
+      notation: "mixed-scientific",
+      formatNotation: "compact"
+    }
+    
+    for (const [optionName, defaultValue] of Object.entries(defaultOptions)) {
+      if (!options[optionName]) options[optionName] = defaultValue
+    }
+    
     const mantissa = this.getMantissa()
     const magnitude = this.getMagnitude()
     
-    const notation = options?.notation ?? "mixed-scientific"
-    
-    const entryCount = this.arrayEntries.length
     const illionPrefixes = {
       "0-to-33-OoM": ["m", "b", "tr", "quadr", "quint", "sext", "sept", "oct", "non", "dec"],
       "prefixes-after-decillion": ["un", "duo", "tre", "quattour", "quin", "sex", "septen", "octo", "novem"]
@@ -195,16 +201,10 @@ class BAN {
       
     }
     
-    const getFormatNotation = () => {
-      if (notation === "plain") return "standard"
-      if (notation === "scientific") return "scientific"
-      return "compact"
-    }
-    
     if (this.arrayEntries.length === 1) {
       return new Intl.NumberFormat('en', { 
         maximumFractionDigits: this.arrayEntries[0] < 100 ? 2 : 0,
-        notation: getFormatNotation(),
+        notation: options.formatNotation,
         compactDisplay: "long"
       }).format(this.arrayEntries[0])
     }
@@ -215,7 +215,7 @@ class BAN {
         
         return new Intl.NumberFormat('en', { 
           maximumFractionDigits: 0,
-          notation: getFormatNotation(),
+          notation: options.formatNotation,
           compactDisplay: "long"
         }).format(number)
       }
@@ -271,7 +271,7 @@ class BAN {
     return this
   }
   
-  mul(value) {
+  mll(value) {
     const clonedArray = this.clone()
     clonedArray.mulBy(value)
     
