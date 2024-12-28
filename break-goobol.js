@@ -182,15 +182,15 @@ class BAN {
   toString(options = {}) {
     const defaultOptions = {
       formatOptions: {
-        formatNotation: "compact"
+        maximumFractionDigits: this.arrayEntries[0] < 100 ? 2 : 0,
+        formatNotation: "compact",
+        compactDisplay: "long"
       },
       notation: "mixed-scientific",
     }
     
     for (const [optionName, defaultValue] of Object.entries(defaultOptions)) {
-      if (options[optionName]) continue
-      
-      options[optionName] = defaultValue
+      if (!options[optionName]) options[optionName] = defaultValue
     }
     
     const mantissa = this.getMantissa()
@@ -206,22 +206,13 @@ class BAN {
     }
     
     if (this.arrayEntries.length === 1) {
-      return new Intl.NumberFormat('en', { 
-        maximumFractionDigits: this.arrayEntries[0] < 100 ? 2 : 0,
-        notation: options.formatNotation,
-        compactDisplay: "long"
-      }).format(this.arrayEntries[0])
+      return new Intl.NumberFormat('en', options.formatOptions).format(this.arrayEntries[0])
     }
     
     if (this.arrayEntries.length === 2) {
       if (notation !== "mixed-scientific" && magnitude < 308) {
         const number = Math.pow(10, magnitude) * mantissa
-        
-        return new Intl.NumberFormat('en', { 
-          maximumFractionDigits: 0,
-          notation: options.formatNotation,
-          compactDisplay: "long"
-        }).format(number)
+        return new Intl.NumberFormat('en', options.formatOptions).format(number)
       }
       
       return `${mantissa.toFixed(2)}e${magnitude}`
