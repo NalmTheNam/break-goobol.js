@@ -16,7 +16,5 @@ html`
 `.render(document.getElementById("app"))
 
 function NumberControlPanel() {
-  
+  return 
 }
-
-window.number = number
