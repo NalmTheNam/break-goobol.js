@@ -256,11 +256,13 @@ class BAN {
     if (this.arrayEntries.length === 1) {
       if (typeof value == "number") this.arrayEntries[0] *= value
     } else if (this.arrayEntries.length === 2) {
-      const multOom = Math.floor(Math.log10(value))
-      const multSignificand = value / 10 ** multOom
+      if (typeof value == "number") {
+        const multOom = Math.floor(Math.log10(value))
+        const multSignificand = value / 10 ** multOom
     
-      this.arrayEntries[1] += multOom
-      this.setMantissa(this.mantissa * multSignificand)
+        this.arrayEntries[1] += multOom
+        this.setMantissav2(this.getMantissa() * multSignificand)
+      }
     }
     
     this.normalizeArray()
