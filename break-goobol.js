@@ -181,12 +181,16 @@ class BAN {
   
   toString(options = {}) {
     const defaultOptions = {
+      formatOptions: {
+        formatNotation: "compact"
+      },
       notation: "mixed-scientific",
-      formatNotation: "compact"
     }
     
     for (const [optionName, defaultValue] of Object.entries(defaultOptions)) {
-      if (!options[optionName]) options[optionName] = defaultValue
+      if (options[optionName]) continue
+      
+      options[optionName] = defaultValue
     }
     
     const mantissa = this.getMantissa()
