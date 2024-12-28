@@ -234,6 +234,8 @@ class BAN {
         const addedMantissa = value / Math.pow(10, this.magnitude)
         this.setMantissav2(this.getMantissa() + addedMantissa)
       }
+    } else if (this.arrayEntries.length > 2 && value instanceof BAN) {
+      
     }
     
     this.normalizeArray()
