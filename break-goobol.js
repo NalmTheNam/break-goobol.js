@@ -465,3 +465,5 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     return this.toNumber()
   }
 }
+
+export default BAN

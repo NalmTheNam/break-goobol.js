@@ -1,46 +1,20 @@
-const { state, effect } = window.BFS.MARKUP
+import BAN from "./break-goobol.js"
 
-const [count, updateCount] = MARKUP.state(0)
-
-// data driven
-MARKUP.effect(() => {
-    if (count() > 10) {
-        alert('You counted passed 10!')
-    }
-})
+const { state, effect, html } = window.BFS.MARKUP
+const [number, updateNumber] = state(new BAN(0))
 
 const countUp = () => {
-    updateCount((prev) => prev + 1)
+    updateNumber(num => num.add(1))
 }
 
 // reactive DOM/templates
-MARKUP.html`
-    <p>count: ${count}</p>
-    <button type="button" onclick="${countUp}">count up</button>
-`.render(document.body)
+html`
+    <h1>break-goobol.js</h1>
+    <h2 class="number">${number}</h2>
+    <p class="plain-notation-number">Plain number: 0</p>
+    <button onclick="${countUp}">Add +1 to number</button>
+`.render(document.getElementById("app"))
 
-
-/*
-const numberText = document.querySelector(".number")
-const plainNumberText = document.querySelector(".plain-notation-number")
-const numberArray = new BAN(0)
-
-const startButton = document.querySelector(".start")
-
-startButton.addEventListener("click", async () => {
-
-}, { once: true })
-
-function render() {
-  numberText.textContent = numberArray.toString()
-  plainNumberText.textContent = `Plain number: ${numberArray.toString({ notation: "plain" })}`
+function NumberControlPanel() {
+  
 }
-
-function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}
-
-function waitUntil(predicate, interval = 100) {
-  const poll = resolve => predicate() ? resolve() : setTimeout(() => poll(resolve), interval)
-  return new Promise(poll)  
-}*/
