@@ -182,56 +182,22 @@ class BAN {
     }
     
     if (this.arrayEntries.length === 2) {
-      if (notation !== "mixed-scientific" && this.magnitude < 308) {
-        const number = Math.pow(10, this.magnitude) * this.mantissa
+      if (notation !== "mixed-scientific" && this.getMagnitude() < 308) {
+        const mantissa = this.getMantissav2()
+        const number = Math.pow(10, this.getMagnitude()) * mantissa
         
         return new Intl.NumberFormat('en', { 
           maximumFractionDigits: 0,
           notation: getFormatNotation(),
           compactDisplay: "long"
-        }).format(number) 
+        }).format(number)
       }
       
-      return `${this.mantissa.toFixed(2)}e${this.magnitude}`
+      return `${mantissa.toFixed(2)}e${this.getMagnitude()}`
     }
   }
   
   add(value) {
-    if (value instanceof BAN) {
-      const number = value.toNumber()
-      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
-        value = number
-    }
-      
-    if (typeof value == "string") {
-      const parsedNumber = Number(value)
-      
-      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber))
-        value = new BAN(value) 
-      else 
-        value = parsedNumber
-    }
-    
-    if (this.arrayEntries.length === 1) {
-      if (typeof value === "number") this.arrayEntries[0] += value
-      else if (value instanceof BAN) {
-        this.arrayEntries[0] = 10
-        this.arrayEntries[1] = value.arrayEntries[1]
-        
-        this.setMantissa(value.mantissa)
-      }
-    } else if (this.arrayEntries.length === 2) {
-      if (typeof value == "number") {
-        const addedMantissa = value / Math.pow(10, this.magnitude)
-        this.setMantissa(this.mantissa + addedMantissa)
-      }
-    }
-    
-    this.normalizeArray()
-    return this
-  }
-  
-  addv2(value) {
     if (value instanceof BAN) {
       const number = value.toNumber()
       if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
@@ -259,13 +225,11 @@ class BAN {
         this.arrayEntries = []
         for (const entry of value.arrayEntries)
           this.arrayEntries.push(entry)
-        
-        this.setMantissa(value.mantissa)
       }
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
         const addedMantissa = value / Math.pow(10, this.magnitude)
-        this.setMantissa(this.mantissa + addedMantissa)
+        this.setMantissav2(this.getMantissav2() + addedMantissa)
       }
     }
     
@@ -341,16 +305,16 @@ class BAN {
   
   setMantissav2(value) {
     const setMagnitude = Math.log10(value)
-    this.numberArray[1] = this.getMagnitude() + setMagnitude
+    this.arrayEntries[1] = this.getMagnitude() + setMagnitude
   }
   
   getMantissav2() {
     let mantissa = 0
-    if (this.arrayEntries.length === 1) mantissa = this.numberArray[0] / Math.pow(10, this.getMagnitude())
+    if (this.arrayEntries.length === 1) mantissa = this.arrayEntries[0] / Math.pow(10, this.getMagnitude())
     
     if (this.arrayEntries.length === 2) {
       const magnitude = this.getMagnitude()
-      mantissa = Math.pow(10, this.numberArray[1] - Math.floor(magnitude))
+      mantissa = Math.pow(10, this.arrayEntries[1] - Math.floor(magnitude))
     }
     
     return mantissa
