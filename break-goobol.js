@@ -19,6 +19,31 @@ class BAN {
     }
   }
   
+  static normalizeValue(value) {
+    if (value instanceof BAN) {
+      const number = value.toNumber()
+      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
+        value = number
+    }
+      
+    if (typeof value == "string") {
+      const digits = value.split(".")
+      const fractionalDigits = digits[1]
+      
+      // if (fractionalDigits && fractionalDigits.length > 15)
+        // value = new BAN.PreciseNumber(value)
+      
+      const parsedNumber = Number(value)
+      
+      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber))
+        value = new BAN(value)
+      else 
+        value = parsedNumber
+    }
+    
+    return value
+  }
+  
   static PreciseNumber = class {
     digits = []
     
@@ -183,7 +208,7 @@ class BAN {
     
     if (this.arrayEntries.length === 2) {
       if (notation !== "mixed-scientific" && this.getMagnitude() < 308) {
-        const mantissa = this.getMantissav2()
+        const mantissa = this.getMantissa()
         const number = Math.pow(10, this.getMagnitude()) * mantissa
         
         return new Intl.NumberFormat('en', { 
@@ -197,27 +222,8 @@ class BAN {
     }
   }
   
-  add(value) {
-    if (value instanceof BAN) {
-      const number = value.toNumber()
-      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
-        value = number
-    }
-      
-    if (typeof value == "string") {
-      const digits = value.split(".")
-      const fractionalDigits = digits[1]
-      
-      if (fractionalDigits && fractionalDigits.length > 15)
-        value = new BAN.PreciseNumber(value)
-      
-      const parsedNumber = Number(value)
-      
-      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber))
-        value = new BAN(value)
-      else 
-        value = parsedNumber
-    }
+  addBy(value) {
+    value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
       if (typeof value === "number") this.arrayEntries[0] += value
@@ -229,7 +235,7 @@ class BAN {
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
         const addedMantissa = value / Math.pow(10, this.magnitude)
-        this.setMantissav2(this.getMantissav2() + addedMantissa)
+        this.setMantissav2(this.getMantissa() + addedMantissa)
       }
     }
     
@@ -237,9 +243,9 @@ class BAN {
     return this
   }
   
-  added(number) {
+  add(number) {
     const clonedArray = this.clone()
-    clonedArray.add(number)
+    clonedArray.addBy(number)
     
     return clonedArray
   }
@@ -308,7 +314,7 @@ class BAN {
     this.arrayEntries[1] = this.getMagnitude() + setMagnitude
   }
   
-  getMantissav2() {
+  getMantissa() {
     let mantissa = 0
     if (this.arrayEntries.length === 1) mantissa = this.arrayEntries[0] / Math.pow(10, this.getMagnitude())
     
@@ -318,10 +324,6 @@ class BAN {
     }
     
     return mantissa
-  }
-  
-  normalizeMantissav2() {
-    
   }
   
   normalizeArray() {
