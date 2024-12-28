@@ -180,6 +180,9 @@ class BAN {
   }
   
   toString(options = {}) {
+    const mantissa = this.getMantissa()
+    const magnitude = this.getMagnitude()
+    
     const notation = options?.notation ?? "mixed-scientific"
     
     const entryCount = this.arrayEntries.length
@@ -207,9 +210,8 @@ class BAN {
     }
     
     if (this.arrayEntries.length === 2) {
-      if (notation !== "mixed-scientific" && this.getMagnitude() < 308) {
-        const mantissa = this.getMantissa()
-        const number = Math.pow(10, this.getMagnitude()) * mantissa
+      if (notation !== "mixed-scientific" && magnitude < 308) {
+        const number = Math.pow(10, magnitude) * mantissa
         
         return new Intl.NumberFormat('en', { 
           maximumFractionDigits: 0,
@@ -218,7 +220,7 @@ class BAN {
         }).format(number)
       }
       
-      return `${mantissa.toFixed(2)}e${this.getMagnitude()}`
+      return `${mantissa.toFixed(2)}e${magnitude}`
     }
   }
   
@@ -276,7 +278,7 @@ class BAN {
     return clonedArray
   }
   
-  pow(value) {
+  powBy(value) {
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
@@ -289,6 +291,13 @@ class BAN {
     
     this.normalizeArray()
     return this
+  }
+  
+  pow(value) {
+    const clonedArray = this.clone()
+    clonedArray.powBy(value)
+    
+    return clonedArray
   }
   
   setMantissa(mantissa) {
