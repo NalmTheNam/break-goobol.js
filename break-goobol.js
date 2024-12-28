@@ -318,7 +318,7 @@ class BAN {
       }
     }
     
-    this.normalizeArray()
+    this.normalizeArrayv2()
     return this
   }
   
@@ -361,6 +361,40 @@ class BAN {
   }
   
   normalizeArray() {
+    this.addDebugLog("Entry count: " + this.arrayEntries.length)
+    this.addDebugLog(`[Normalizer] Looping through array entries in order to normalize them!`, { type: "info" })
+    
+    if (this.arrayEntries.length === 1)
+      return this.normalizeFirstEntry()
+    
+    for (let i = 0; i < this.arrayEntries.length; i++) {
+      const entry = this.arrayEntries[i]
+      const isFirstEntry = i === 0
+      
+      if (entry == null) {
+        if (isFirstEntry) this.arrayEntries[i] = 0
+        else this.arrayEntries[i] = 1
+        
+        continue
+      }
+      
+      if (entry > Number.MAX_SAFE_INTEGER) {
+        this.arrayEntries[i] = new BAN(entry)
+      }
+      
+      if (typeof entry === "string" || entry instanceof Array) {
+        this.addDebugLog(`Entry #${i + 1} is an array or a string, converting entry into BAN array...`)
+        this.arrayEntries[i] = new BAN(entry)
+        
+        continue
+      }
+      
+      if (entry instanceof BAN)
+        entry.normalizeArray()
+    }
+  }
+  
+  normalizeArrayv2() {
     this.addDebugLog("Entry count: " + this.arrayEntries.length)
     this.addDebugLog(`[Normalizer] Looping through array entries in order to normalize them!`, { type: "info" })
     
