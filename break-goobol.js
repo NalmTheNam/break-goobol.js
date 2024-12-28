@@ -243,43 +243,40 @@ class BAN {
     return this
   }
   
-  add(number) {
+  add(value) {
     const clonedArray = this.clone()
-    clonedArray.addBy(number)
+    clonedArray.addBy(value)
     
     return clonedArray
   }
   
-  mul(multiplier) {
-    const newArray = this.clone()
+  mulBy(value) {
+    value = BAN.normalizeValue(value)
     
-    if (typeof multiplier == "string")
-      multiplier = BAN.parseNumber(multiplier)
+    if (this.arrayEntries.length === 1) {
+      if (typeof value == "number") this.arrayEntries[0] *= value
+    } else if (this.arrayEntries.length === 2) {
+      const multOom = Math.floor(Math.log10(value))
+      const multSignificand = value / 10 ** multOom
     
-    if (newArray.arrayEntries.length === 1 && !(multiplier instanceof BAN)) {
-      newArray.arrayEntries[0] *= multiplier
-      newArray.normalizeArray()
-      
-      return newArray
+      this.arrayEntries[1] += multOom
+      this.setMantissa(this.mantissa * multSignificand)
     }
-        
-    /*
-    if (typeof number == "string") {
-      const result = BAN.parseNumber(number)
-      return result
-    }*/
     
+    this.normalizeArray()
+    return this
+  }
+  
+  mul(value) {
+    const clonedArray = this.clone()
+    clonedArray.mulBy(value)
     
-    const multOom = Math.floor(Math.log10(multiplier))
-    const multSignificand = multiplier / 10 ** multOom
-    
-    newArray.arrayEntries[1] += multOom
-    newArray.setMantissa(newArray.mantissa * multSignificand)
-    
-    return newArray
+    return clonedArray
   }
   
   pow(value) {
+    value = BAN.normalizeValue(value)
+    
     if (this.arrayEntries.length === 1) {
       if (typeof value == "number") this.arrayEntries[0] **= value
     } else if (this.arrayEntries.length === 2) {
