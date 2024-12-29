@@ -442,8 +442,13 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   toNumber() {
     if (this.arrayEntries.length === 1) return this.arrayEntries[0]
     else if (this.arrayEntries.length === 2) {
-      const base = 
-      return Math.pow(this.arrayEntries[0], this.arrayEntries[1])
+      const base = this.arrayEntries[0]
+      let exponent = this.arrayEntries[1]
+      
+      if (exponent instanceof BAN) 
+        exponent = exponent.toNumber()
+      
+      return Math.pow(base, exponent)
     }
   }
   
