@@ -24,3 +24,5 @@ function NumberControlPanel() {
     <button onclick="${raiseNumber}">Raise the number to the power of 2</button>
   `
 }
+
+window.BAN = BAN

@@ -229,7 +229,7 @@ class BAN {
       }
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
-        const addedMantissa = value / Math.pow(10, this.magnitude)
+        const addedMantissa = value / Math.pow(10, this.getMagnitude())
         this.setMantissa(this.getMantissa() + addedMantissa)
       }
     } else if (this.arrayEntries.length > 2 && value instanceof BAN) {
@@ -266,7 +266,7 @@ class BAN {
     return this
   }
   
-  mll(value) {
+  mul(value) {
     const clonedArray = this.clone()
     clonedArray.mulBy(value)
     
@@ -310,6 +310,16 @@ class BAN {
     }
     
     return mantissa
+  }
+  
+  getMagnitude() {
+    if (this.arrayEntries.length === 1) return Math.floor(Math.log10(this.toNumber()))
+    
+    const magnitude = this.arrayEntries[1]
+    if (magnitude instanceof BAN) 
+      magnitude = magnitude.toNumber()
+    
+    return Math.floor(magnitude)
   }
   
   normalizeArray() {
@@ -409,24 +419,10 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     if (parsedMagnitude === Number.POSITIVE_INFINITY || Number.isNaN(parsedMagnitude))
       parsedMagnitude = new BAN(magnitude)
     
-    this.setMantissa(parsedMantissa)
-    
     this.arrayEntries[0] = 10
     this.arrayEntries[1] = parsedMagnitude
-  }
-  
-  get magnitude() {
-    return Math.floor(this.arrayEntries[1]) ?? Math.floor(Math.log10(this.toNumber()))
-  }
-  
-  getMagnitude() {
-    if (this.arrayEntries.length === 1) return Math.floor(Math.log10(this.toNumber()))
     
-    const magnitude = this.arrayEntries[1]
-    if (magnitude instanceof BAN) 
-      magnitude = magnitude.toNumber()
-    
-    return Math.floor(magnitude)
+    this.setMantissa(parsedMantissa)
   }
   
   getNestingDepth() {
@@ -445,7 +441,10 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   
   toNumber() {
     if (this.arrayEntries.length === 1) return this.arrayEntries[0]
-    return Math.pow(this.arrayEntries[0], this.arrayEntries[1]) * this.mantissa
+    else if (this.arrayEntries.length === 2) {
+      const base = 
+      return Math.pow(this.arrayEntries[0], this.arrayEntries[1])
+    }
   }
   
   valueOf() {
