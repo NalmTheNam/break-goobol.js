@@ -117,10 +117,8 @@ class BAN {
         this.arrayEntries = value
       }  else if (value instanceof BAN) {
         this.arrayEntries = value.arrayEntries
-        this.mantissa = value.mantissa
       }
     
-      this.normalizeMantissa()
       this.normalizeArray()
     }
     
@@ -232,7 +230,7 @@ class BAN {
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
         const addedMantissa = value / Math.pow(10, this.magnitude)
-        this.setMantissav2(this.getMantissa() + addedMantissa)
+        this.setMantissa(this.getMantissa() + addedMantissa)
       }
     } else if (this.arrayEntries.length > 2 && value instanceof BAN) {
       
@@ -260,7 +258,7 @@ class BAN {
         const multSignificand = value / 10 ** multOom
     
         this.arrayEntries[1] += multOom
-        this.setMantissav2(this.getMantissa() * multSignificand)
+        this.setMantissa(this.getMantissa() * multSignificand)
       }
     }
     
@@ -297,24 +295,7 @@ class BAN {
     return clonedArray
   }
   
-  setMantissa(mantissa) {
-    this.mantissa = mantissa
-    this.normalizeMantissa()
-  }
-  
-  normalizeMantissa() {
-    if (this.mantissa === 0)
-      this.mantissa = 1
-    
-    if (this.mantissa < 1 || this.mantissa >= 10) {
-      const mantissaOom = Math.floor(Math.log10(this.mantissa))
-      
-      this.arrayEntries[1] += mantissaOom
-      this.mantissa /= 10 ** mantissaOom
-    }
-  }
-  
-  setMantissav2(value) {
+  setMantissa(value) {
     const setMagnitude = Math.log10(value)
     this.arrayEntries[1] = this.getMagnitude() + setMagnitude
   }

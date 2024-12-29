@@ -3,7 +3,6 @@ import BAN from "./break-goobol.js"
 const { state, effect, html } = window.BFS.MARKUP
 const [number, updateNumber] = state(new BAN(0))
 
-// reactive DOM/templates
 html`
     <h1>break-goobol.js</h1>
     <h2 class="number">${number}</h2>
