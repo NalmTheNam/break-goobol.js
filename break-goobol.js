@@ -189,11 +189,14 @@ class BAN {
     const notationOptions = {
       "mixed-scientific": {
         formatOptions: {
-          get maximumFractionDigits() {
-            let digitSubtractor = Math.floor(Math.log10(this.arrayEntries[0] + 1))
-            if (digitSubtractor < 0) digitSubtractor = 0
+          getMaximumFractionDigits: () => {
+            let digitSubtractor = Math.floor(Math.log10(this.base + 1))
+            if (digitSubtractor > 2) digitSubtractor = 2
             
             return 2 - digitSubtractor
+          },
+          get maximumFractionDigits() {
+            return this.getMaximumFractionDigits()
           },
           notation: "standard"
         }
