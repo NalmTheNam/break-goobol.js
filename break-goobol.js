@@ -208,10 +208,11 @@ class BAN {
     }
     
     if (this.arrayEntries.length === 2) {
+      /*
       if (this.notation !== "mixed-scientific" && magnitude < 308) {
         const number = Math.pow(10, magnitude) * mantissa
         return new Intl.NumberFormat('en', options.formatOptions).format(number)
-      }
+      }*/
       
       return `${mantissa.toFixed(2)}e${magnitude}`
     }
@@ -314,11 +315,9 @@ class BAN {
   
   getMagnitude() {
     if (this.arrayEntries.length === 1) return Math.floor(Math.log10(this.toNumber()))
-    
     const magnitude = this.arrayEntries[1]
-    if (magnitude instanceof BAN) 
-      magnitude = magnitude.toNumber()
     
+    if (magnitude instanceof BAN) return magnitude
     return Math.floor(magnitude)
   }
   
@@ -440,16 +439,19 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   }
   
   toNumber() {
-    if (this.arrayEntries.length === 1) return this.arrayEntries[0]
+    if (this.arrayEntries.length === 1) return this.base
     else if (this.arrayEntries.length === 2) {
-      const base = this.arrayEntries[0]
       let exponent = this.arrayEntries[1]
       
       if (exponent instanceof BAN) 
         exponent = exponent.toNumber()
       
-      return Math.pow(base, exponent)
+      return Math.pow(this.base, exponent)
     }
+  }
+  
+  get base() {
+    return this.arrayEntries[0]
   }
   
   valueOf() {
