@@ -26,3 +26,4 @@ function NumberControlPanel() {
 }
 
 window.BAN = BAN
+window.updateNumber = updateNumber

@@ -180,10 +180,24 @@ class BAN {
     const defaultOptions = {
       formatOptions: {
         maximumFractionDigits: this.arrayEntries[0] < 100 ? 2 : 0,
-        formatNotation: "compact",
+        notation: "compact",
         compactDisplay: "long"
       },
       notation: "mixed-scientific",
+    }
+    
+    const notationOptions = {
+      "mixed-scientific": {
+        formatOptions: {
+          get maximumFractionDigits() {
+            let digitSubtractor = Math.floor(Math.log10(this.arrayEntries[0] + 1))
+            if (digitSubtractor < 0) digitSubtractor = 0
+            
+            return 2 - digitSubtractor
+          },
+          notation: "standard"
+        }
+      }
     }
     
     for (const [optionName, defaultValue] of Object.entries(defaultOptions)) {
@@ -203,7 +217,7 @@ class BAN {
     }
     
     if (this.arrayEntries.length === 1) {
-      return new Intl.NumberFormat('en', options.formatOptions).format(this.base)
+      return new Intl.NumberFormat('en', notationOptions[options.notation].formatOptions).format(this.base)
     }
     
     if (this.arrayEntries.length === 2) {
