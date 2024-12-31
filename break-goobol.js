@@ -109,15 +109,14 @@ class BAN {
     if (this._cloned) {
       this.addDebugLog(`Note: This array is a clone from another array with ID ${this._clonedFrom}.`, { type: "info" })
     } else {
-      if (typeof value == "string") {
+      if (typeof value == "string")
         this.setupArrayFromString(value)
-      } else if (typeof value == "number") {
-        this.arrayEntries[0] = value
-      } else if (value instanceof Array) {
+      else if (typeof value == "number")
+        this.base = value
+      else if (value instanceof Array)
         this.arrayEntries = value
-      }  else if (value instanceof BAN) {
+      else if (value instanceof BAN)
         this.arrayEntries = value.arrayEntries
-      }
     
       this.normalizeArray()
     }
@@ -204,7 +203,7 @@ class BAN {
     }
     
     if (this.arrayEntries.length === 1) {
-      return new Intl.NumberFormat('en', options.formatOptions).format(this.arrayEntries[0])
+      return new Intl.NumberFormat('en', options.formatOptions).format(this.base)
     }
     
     if (this.arrayEntries.length === 2) {
@@ -278,7 +277,7 @@ class BAN {
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
-      if (typeof value == "number") this.arrayEntries[0] **= value
+      if (typeof value == "number") this.base **= value
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
         this.arrayEntries[1] *= value
@@ -298,12 +297,18 @@ class BAN {
   
   setMantissa(value) {
     const setMagnitude = Math.log10(value)
-    this.arrayEntries[1] = this.getMagnitude() + setMagnitude
+    
+    if (this.arrayEntries.length === 1)
+      this.base = Math.pow(10, this.getMagnitude()) * setMagnitude
+    else if (this.arrayEntries.length === 2)
+      this.arrayEntries[1] = this.getMagnitude() + setMagnitude
+    
+    return this
   }
   
   getMantissa() {
     let mantissa = 0
-    if (this.arrayEntries.length === 1) mantissa = this.arrayEntries[0] / Math.pow(10, this.getMagnitude())
+    if (this.arrayEntries.length === 1) mantissa = this.base / Math.pow(10, this.getMagnitude())
     
     if (this.arrayEntries.length === 2) {
       const magnitude = this.getMagnitude()
@@ -448,6 +453,10 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
       
       return Math.pow(this.base, exponent)
     }
+  }
+  
+  set base(value) {
+    this.arrayEntries[0] = value
   }
   
   get base() {
