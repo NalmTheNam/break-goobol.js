@@ -222,11 +222,8 @@ class BAN {
     
     if (this.arrayEntries.length === 1) {
       if (typeof value === "number") this.arrayEntries[0] += value
-      else if (value instanceof BAN) {
-        this.arrayEntries = []
-        for (const entry of value.arrayEntries)
-          this.arrayEntries.push(entry)
-      }
+      else if (value instanceof BAN)
+        this.arrayEntries = value.arrayEntries
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
         const addedMantissa = value / Math.pow(10, this.getMagnitude())
@@ -296,13 +293,14 @@ class BAN {
   }
   
   setMantissa(value) {
-    const setMagnitude = Math.log10(value)
-    
     if (this.arrayEntries.length === 1)
-      this.base = Math.pow(10, this.getMagnitude()) * setMagnitude
-    else if (this.arrayEntries.length === 2)
+      this.base = Math.pow(10, this.getMagnitude()) * value
+    else if (this.arrayEntries.length === 2) {
+      const setMagnitude = Math.log10(value)
       this.arrayEntries[1] = this.getMagnitude() + setMagnitude
+    }
     
+    this.normalizeArray()
     return this
   }
   
@@ -383,12 +381,7 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     }  
     
     if (firstEntry > Number.MAX_SAFE_INTEGER) {
-      const magnitude = Math.floor(Math.log10(firstEntry))
-      const mantissa = firstEntry / Math.pow(10, magnitude)
-        
-      this.setMantissa(mantissa)
-        
-      this.arrayEntries[0] = 10
+      this.base = 10
       this.arrayEntries[1] = Math.log10(firstEntry)
     }
   }
