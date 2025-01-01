@@ -15,14 +15,13 @@ body {
 
 .control-panel-buttons {
   display: grid;
-  grid-template-columns: repeat(5, 10em);
-  align-items: center;
-  justify-items: center;
+  grid-template-columns: repeat(5, 1fr);
+  margin: 0 10em;
 }
 
 .control-panel-buttons button {
-    display: grid;
-    grid-template-columns: repeat(5, 10em);
-    align-items: center;
-    justify-items: center;
+  margin: 1em;
+  font-size: 15px;
+  padding: 1.75em;
+  cursor: pointer;
 }
