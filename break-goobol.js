@@ -268,11 +268,11 @@ class BAN {
       if (typeof value == "number") this.arrayEntries[0] *= value
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
-        const multOom = Math.floor(Math.log10(value))
-        const multSignificand = value / 10 ** multOom
+        const valueOom = Math.floor(Math.log10(value))
+        const valueMantissa = value / 10 ** valueOom
     
-        this.arrayEntries[1] += multOom
-        this.setMantissa(this.getMantissa() * multSignificand)
+        this.arrayEntries[1] += valueOom
+        this.setMantissa(this.getMantissa() * valueMantissa)
       }
     }
     
@@ -294,7 +294,8 @@ class BAN {
       if (typeof value == "number") this.base **= value
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
-        this.arrayEntries[1] *= value
+        if (typeof this.arrayEntries[1] == "number") this.arrayEntries[1] *= value
+        else if (this.arrayEntries[1] instanceof BAN) this.arrayEntries[1].mulBy(value)
       }
     }
     
@@ -327,7 +328,8 @@ class BAN {
     
     if (this.arrayEntries.length === 2) {
       const magnitude = this.getMagnitude()
-      mantissa = Math.pow(10, this.arrayEntries[1] - Math.floor(magnitude))
+      if (typeof magnitude == "number") mantissa = Math.pow(10, this.arrayEntries[1] - Math.floor(magnitude))
+      if (magnitude instanceof BAN) mantissa = 1
     }
     
     return mantissa
