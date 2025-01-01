@@ -7,10 +7,10 @@ html`
     <h1>break-goobol.js</h1>
     <h2 class="number">${number}</h2>
     <p class="plain-notation-number">Plain number: 0</p>
-    ${NumberControlPanel()}
+    ${numberControlPanel()}
 `.render(document.getElementById("app"))
 
-function NumberControlPanel() {
+function numberControlPanel() {
   const controlButtons = {
     "Add +1 to number": {
       press: () => updateNumber(num => num.add(1))
@@ -41,14 +41,19 @@ function NumberControlPanel() {
     },
     "Raise number to the third power": {
       press: () => updateNumber(num => num.pow(3))
-    }
+    },
+    "Reset number to 0": {
+      press: () => updateNumber(num => new BAN(0))
+    },
   }
   
   function renderPanelButtons() {
     return html`
-      ${Object.entries(controlButtons).map(([name, button]) => {
-        return html`<button onclick=${button.press}>${name}</button>`
-      })}
+      <div class="control-panel-buttons">
+        ${Object.entries(controlButtons).map(([name, button]) => {
+          return html`<button onclick=${button.press}>${name}</button>`
+        })}
+      </div>
     `
   }
   

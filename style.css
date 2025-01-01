@@ -12,3 +12,17 @@ body {
   margin-top: 0.25em;
   overflow-wrap: break-word;
 }
+
+.control-panel-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 10em);
+  align-items: center;
+  justify-items: center;
+}
+
+.control-panel-buttons button {
+    display: grid;
+    grid-template-columns: repeat(5, 10em);
+    align-items: center;
+    justify-items: center;
+}
