@@ -19,9 +19,14 @@ function NumberControlPanel() {
     updateNumber(num => num.pow(2))
   }
   
+  const raiseNumberTo10 = () => {
+    updateNumber(num => num.pow(10))
+  }
+  
   return html`
     <button onclick="${addNumber}">Add +1 to number</button>
     <button onclick="${raiseNumber}">Raise the number to the power of 2</button>
+    <button onclick="${raiseNumberTo10}">Raise the number to the power of 10</button>
   `
 }
 

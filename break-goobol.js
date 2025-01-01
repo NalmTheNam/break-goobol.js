@@ -328,7 +328,8 @@ class BAN {
     
     if (this.arrayEntries.length === 2) {
       const magnitude = this.getMagnitude()
-      if (typeof magnitude == "number") mantissa = Math.pow(10, this.arrayEntries[1] - Math.floor(magnitude))
+      
+      if (typeof magnitude == "number") mantissa = Math.pow(10, this.arrayEntries[1] - magnitude)
       if (magnitude instanceof BAN) mantissa = 1
     }
     
