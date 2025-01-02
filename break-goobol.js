@@ -235,7 +235,10 @@ class BAN {
   }
   
   addBy(value) {
+    debugger;
     value = BAN.normalizeValue(value)
+    
+    if (value === Number.POSITIVE_INFINITY || value === Number.NEGATIVE_INFINITY) this.arrayEntries = []
     
     if (this.arrayEntries.length === 1) {
       if (typeof value === "number") this.arrayEntries[0] += value
@@ -318,7 +321,6 @@ class BAN {
       this.arrayEntries[1] = this.getMagnitude() + setMagnitude
     }
     
-    debugger;
     this.normalizeArray()
     return this
   }
