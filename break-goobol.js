@@ -413,6 +413,10 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     return normalizedArray
   }
   
+  optimizeArray() {
+    
+  }
+  
   setupArrayFromString(string) {
     if (typeof string !== "string") return
     
