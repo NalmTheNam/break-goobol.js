@@ -7,6 +7,14 @@ body {
   text-align: center;
 }
 
+button {
+  font: inherit;
+  
+  border-radius: 5px;
+  border: 1px solid rgb(28, 28, 28);
+  color: inherit;
+}
+
 .number {
   font-size: 50px;
   margin: 0.25em;
@@ -23,7 +31,7 @@ body {
   padding: 0 10em
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1248px) {
   .control-panel-buttons {
     grid-template-columns: repeat(3, 1fr);
   }
