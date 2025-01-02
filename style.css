@@ -10,9 +10,26 @@ body {
 button {
   font: inherit;
   
-  border-radius: 5px;
-  border: 1px solid rgb(28, 28, 28);
+  border-radius: 10px;
+  border: 1px solid rgb(50, 50, 50);
   color: inherit;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: rgb(22, 21, 36);
+    color: rgb(240, 240, 240);
+  }
+  
+  button {
+    color: rgb(50, 50, 50);
+    background-color: rgb(200, 200, 200)
+  }
+}
+
+@media platform
+button:focus {
+  border: 2px solid rgb(50, 50, 50)
 }
 
 .number {
