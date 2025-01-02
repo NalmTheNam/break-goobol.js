@@ -23,13 +23,9 @@ button {
   
   button {
     color: rgb(50, 50, 50);
-    background-color: rgb(200, 200, 200)
+    background-color: rgb(240, 240, 240);
+    border: 2px solid rgb(198, 195, 250);
   }
-}
-
-@media platform
-button:focus {
-  border: 2px solid rgb(50, 50, 50)
 }
 
 .number {

@@ -414,7 +414,13 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   }
   
   optimizeArray() {
-    
+    if (this.arrayEntries.length === 3) {
+      const replicator = this.arrayEntries[1]
+      
+      if (replicator < 5) {
+        
+      }
+    }
   }
   
   setupArrayFromString(string) {
