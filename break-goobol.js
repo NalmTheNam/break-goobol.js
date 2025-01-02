@@ -235,10 +235,8 @@ class BAN {
   }
   
   addBy(value) {
-    debugger;
     value = BAN.normalizeValue(value)
-    
-    if (value === Number.POSITIVE_INFINITY || value === Number.NEGATIVE_INFINITY) this.arrayEntries = []
+    if (value === Number.POSITIVE_INFINITY || value === Number.NEGATIVE_INFINITY) this.arrayEntries = [value]
     
     if (this.arrayEntries.length === 1) {
       if (typeof value === "number") this.arrayEntries[0] += value
@@ -383,6 +381,9 @@ class BAN {
   
   normalizeFirstEntry() {
     const firstEntry = this.arrayEntries[0]
+    
+    // Infinity is infinite so why are we even normalizing anymore?
+    if (firstEntry === Number.POSITIVE_INFINITY || firstEntry === Number.NEGATIVE_INFINITY) return
     
     if (firstEntry instanceof BAN) {
       this.addDebugLog("The first entry is a BAN array! Setting the array entries to the first entry's array entries...", { type: "info" })
