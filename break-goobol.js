@@ -318,6 +318,7 @@ class BAN {
       this.arrayEntries[1] = this.getMagnitude() + setMagnitude
     }
     
+    debugger;
     this.normalizeArray()
     return this
   }
@@ -414,9 +415,12 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   }
   
   optimizeArray() {
+    const replicator = this.arrayEntries[1]
+    
+    // BAN Rule 3: If the second entry is 1, the value is just the first entry: (taken from https://googology.fandom.com/wiki/Bird%27s_array_notation)
+    if (replicator === 1) this.arrayEntries = [this.arrayEntries[0]]
+    
     if (this.arrayEntries.length === 3) {
-      const replicator = this.arrayEntries[1]
-      
       if (replicator < 5) {
         
       }
