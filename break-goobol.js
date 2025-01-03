@@ -198,7 +198,7 @@ class BAN {
           get maximumFractionDigits() {
             return this.getMaximumFractionDigits()
           },
-          notation: "compact"
+          notation: "standard"
         },
       }
     }
