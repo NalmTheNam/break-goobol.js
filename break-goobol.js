@@ -198,8 +198,8 @@ class BAN {
           get maximumFractionDigits() {
             return this.getMaximumFractionDigits()
           },
-          notation: "standard"
-        }
+          notation: "compact"
+        },
       }
     }
     
@@ -224,13 +224,14 @@ class BAN {
     }
     
     if (this.arrayEntries.length === 2) {
+      const formattedMagnitude = typeof magnitude == "number" ? new BAN(magnitude).toString(options) : magnitude.toString(options)
       /*
       if (this.notation !== "mixed-scientific" && magnitude < 308) {
         const number = Math.pow(10, magnitude) * mantissa
         return new Intl.NumberFormat('en', options.formatOptions).format(number)
       }*/
       
-      return `${mantissa.toFixed(2)}e${magnitude}`
+      return `${mantissa.toFixed(2)}e${formattedMagnitude}`
     }
   }
   
