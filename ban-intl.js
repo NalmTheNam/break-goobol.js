@@ -1,10 +1,13 @@
 class BANFormat extends Intl.NumberFormat {
-  /*constructor(locales, options) {
+  #options
+  
+  constructor(locales, options) {
     super(locales, options)
-  }*/
+    this.#options = options
+  }
   
   format(value) {
-    let formattedValue = super.format(value)
+    const formattedValue = super.format(value)
     return formattedValue
   }
 }
