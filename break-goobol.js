@@ -1,3 +1,5 @@
+import { BANFormat } from "./ban-intl.js"
+
 class BAN {
   static debugMode = false
   static getDebugHandler() {
@@ -500,3 +502,4 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
 }
 
 export default BAN
+window.BANFormat = BANFormat
