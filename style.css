@@ -3,7 +3,8 @@
 }
 
 :root {
-  --dark-color: rgb(50, 50, 50)
+  --dark-color: rgb(50, 50, 50);
+  --bg-color: rgb(235, 235, 235, 80%);
 }
 
 body {
@@ -15,12 +16,18 @@ button {
   font: inherit;
   
   border-radius: 10px;
-  border: 1px solid rgb(50, 50, 50);
+  border: 1px solid var(--dark-color);
+  
+  background: var(--bg-color);
   color: inherit;
 }
 
 button:hover {
-  background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
+  background: rgb(220, 220, 220, 80%)
+}
+
+button:active {
+  background: rgb(210, 210, 210, 80%)
 }
 
 @media (prefers-color-scheme: dark) {
