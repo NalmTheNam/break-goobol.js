@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+:root {
+  --dark-color: rgb(50, 50, 50)
+}
+
 body {
   font-family: "Helvetica", "Arial", sans-serif;
   text-align: center;
@@ -13,6 +17,10 @@ button {
   border-radius: 10px;
   border: 1px solid rgb(50, 50, 50);
   color: inherit;
+}
+
+button:hover {
+  background-image: linear-gradient(rgb(0 0 0/40%) 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,9 +52,17 @@ button {
   padding: 0 10em
 }
 
-@media (max-width: 1248px) {
+@media screen and (max-width: 1248px) {
   .control-panel-buttons {
     grid-template-columns: repeat(3, 1fr);
+    padding: 0 5em
+  }
+}
+
+@media screen and (max-width: 1248px) {
+  .control-panel-buttons {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 5em
   }
 }
 
