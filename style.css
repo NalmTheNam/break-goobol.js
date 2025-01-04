@@ -59,23 +59,26 @@ button:active {
   padding: 0 10em
 }
 
-@media screen and (max-width: 1248px) {
-  .control-panel-buttons {
-    grid-template-columns: repeat(3, 1fr);
-    padding: 0 5em
-  }
-}
-
-@media screen and (max-width: 1248px) {
-  .control-panel-buttons {
-    grid-template-columns: repeat(3, 1fr);
-    padding: 0 5em
-  }
-}
-
 .control-panel-buttons button {
   margin: 1em;
   font-size: 1.3em;
-  padding: 1.4em;
+  padding: 1.3em;
   cursor: pointer;
+}
+
+@media screen and (max-width: 1248px) {
+  .control-panel-buttons {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0 5em
+  }
+}
+
+@media screen and (max-width: 775px) {
+  .control-panel-buttons {
+    padding: 0 3em
+  }
+  
+  .control-panel-buttons button {
+    font-size: 1em;
+  }
 }
