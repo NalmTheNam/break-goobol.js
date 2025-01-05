@@ -23,6 +23,8 @@ class BAN {
   
   static normalizeValue(value) {
     if (value instanceof BAN) {
+      value.normalizeArray()
+      
       const number = value.toNumber()
       if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
         value = number
