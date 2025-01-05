@@ -1,20 +1,13 @@
 class BANFormat extends Intl.NumberFormat {
+  //static BAN
+  
   constructor(locales, options) {
     super(locales, options)
-    if (!options.BAN) throw new Error("This extension of NumberFormat must have a BAN class")
-    
-    const resolvedOptions = this.resolvedOptions()
-    this.resolvedOptions = () => {
-      return {
-        ...resolvedOptions,
-        BAN: options.BAN
-      }
-    }
   }
   
   format(value) {
     const options = this.resolvedOptions()
-    const BAN = options.BAN
+    const BAN = BANFormat.BAN
     
     console.log(options.notation)
     
