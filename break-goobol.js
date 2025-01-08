@@ -22,13 +22,8 @@ class BAN {
   }
   
   static normalizeValue(value) {
-    if (value instanceof BAN) {
+    if (value instanceof BAN) 
       value.normalizeArray()
-      
-      const number = value.toNumber()
-      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
-        value = number
-    }
       
     if (typeof value == "string") {
       const digits = value.split(".")
@@ -240,8 +235,17 @@ class BAN {
   }
   
   addBy(value) {
+    if (value instanceof BAN) {
+      value.normalizeArray()
+      
+      const number = value.toNumber()
+      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
+        value = number
+    }
+    
     value = BAN.normalizeValue(value)
-    if (value === Number.POSITIVE_INFINITY || value === Number.NEGATIVE_INFINITY) this.arrayEntries = [value]
+    if (value === Number.POSITIVE_INFINITY || value === Number.NEGATIVE_INFINITY) {
+      this.arrayEntries = [value]
     
     if (this.arrayEntries.length === 1) {
       if (typeof value === "number") this.arrayEntries[0] += value
@@ -268,6 +272,14 @@ class BAN {
   }
   
   mulBy(value) {
+    if (value instanceof BAN) {
+      value.normalizeArray()
+      
+      const number = value.toNumber()
+      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
+        value = number
+    }
+    
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
@@ -294,6 +306,14 @@ class BAN {
   }
   
   powBy(value) {
+    if (value instanceof BAN) {
+      value.normalizeArray()
+      
+      const number = value.toNumber()
+      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
+        value = number
+    }
+    
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
