@@ -532,9 +532,19 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     return this.arrayEntries[1]
   }
   
-  get pilot() {
-    const entriesWithoutB
-    return this.arrayEntries.slice(2).filter()
+  getPilot() {
+    const entriesAfterPrime = this.arrayEntries.slice(2)
+    return entriesAfterPrime.filter(value => value !== 1)[0]
+  }
+  
+  findPilotIndex() {
+    const entriesAfterPrime = this.arrayEntries.slice(2)
+    return entriesAfterPrime.findIndex(entry => entry === this.getPilot()) + 2
+  }
+  
+  getCopilot() {
+    const pilotIndex = this.findPilotIndex()
+    return this.arrayEntries[pilotIndex - 1]
   }
   
   valueOf() {
