@@ -234,6 +234,20 @@ class BAN {
     }
   }
   
+  gt(comparedValue) {
+    if (comparedValue === Number.POSITIVE_INFINITY) return false
+    if (comparedValue === Number.NEGATIVE_INFINITY) return true
+    
+    if (comparedValue instanceof BAN && Number.isFinite(comparedValue.toNumber())) comparedValue = comparedValue.toNumber()
+    comparedValue = BAN.normalizeValue(comparedValue)
+    
+    if (typeof comparedValue == "number") 
+      return this.toNumber() > comparedValue
+    else if (comparedValue instanceof BAN) {
+      return
+    }
+  }
+  
   addBy(value) {
     if (value === Number.POSITIVE_INFINITY || value === Number.NEGATIVE_INFINITY) {
       this.arrayEntries = [value]
@@ -249,7 +263,7 @@ class BAN {
         this.arrayEntries = value.arrayEntries
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
-        const addedMantissa = value / Math.pow(10, this.getMagnitude())
+        const addedMantissa = value / Math.pow(this.base, this.getMagnitude())
         this.setMantissa(this.getMantissa() + addedMantissa)
       } else if (value instanceof BAN) {
         
@@ -512,6 +526,15 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   
   get base() {
     return this.arrayEntries[0]
+  }
+  
+  get prime() {
+    return this.arrayEntries[1]
+  }
+  
+  get pilot() {
+    const entriesWithoutB
+    return this.arrayEntries.slice(2).filter()
   }
   
   valueOf() {
