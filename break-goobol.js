@@ -244,8 +244,20 @@ class BAN {
     if (typeof comparedValue == "number") 
       return this.toNumber() > comparedValue
     else if (comparedValue instanceof BAN) {
-      return
+      const arrayLength = this.arrayEntries.length
+      const comparedArrayLength = comparedValue.arrayEntries.length
+      
+      const arrayLengthDifference = arrayLength - comparedArrayLength
+      
+      if (arrayLengthDifference <= -2) return false
+      if (arrayLengthDifference >= 2) return true
+      
+      if (comparedArrayLength === arrayLength) {
+        
+      }
     }
+    
+    throw new NotImplementedError("Lol you definitely did not handle some ")
   }
   
   addBy(value) {
@@ -504,7 +516,7 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   }
   
   toNumber() {
-    if (this.arrayEntries.length === 1) return this.base
+    if (this.arrayEntries.length === 1 || this.prime === 1) return this.base
     else if (this.arrayEntries.length === 2) {
       let exponent = this.arrayEntries[1]
       
