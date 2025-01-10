@@ -43,19 +43,6 @@ class BAN {
     return value
   }
   
-  // This function attempts to convert a BAN array to a non-infinite number. Returns a number if the number is non-infinite, otherwise return a BAN array.
-  static convertArrayToNumber(value) {
-    if (!(value instanceof BAN)) throw new Error("Value is not a BAN array.")
-    
-    value.normalizeArray()
-      
-    const number = value.toNumber()
-    if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
-      value = number
-    
-    return value
-  }
-  
   static PreciseNumber = class {
     digits = []
     
@@ -253,7 +240,7 @@ class BAN {
       return this
     }
     
-    if (value instanceof BAN) value = BAN.convertArrayToNumber(value)
+    if (value instanceof BAN && Number.isFinite(value.toNumber())) value = value.toNumber()
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
@@ -281,14 +268,7 @@ class BAN {
   }
   
   mulBy(value) {
-    if (value instanceof BAN) {
-      value.normalizeArray()
-      
-      const number = value.toNumber()
-      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
-        value = number
-    }
-    
+    if (value instanceof BAN && !Number.isFinite(value.toNumber())) value = value.toNumber()
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
