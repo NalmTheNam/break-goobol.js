@@ -8,6 +8,7 @@ html`
     <h2 class="number">${number}</h2>
     <p class="plain-notation-number">Plain number: 0</p>
     ${numberControlPanel()}
+    <button>Start LNGI</button>
 `.render(document.getElementById("app"))
 
 function numberControlPanel() {
