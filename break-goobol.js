@@ -251,6 +251,8 @@ class BAN {
       if (typeof value == "number") {
         const addedMantissa = value / Math.pow(10, this.getMagnitude())
         this.setMantissa(this.getMantissa() + addedMantissa)
+      } else if (value instanceof BAN) {
+        
       }
     } else if (this.arrayEntries.length > 2 && value instanceof BAN) {
       
