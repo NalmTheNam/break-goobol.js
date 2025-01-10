@@ -25,7 +25,7 @@ function numberControlPanel() {
       press: () => updateNumber(num => num.add(1000))
     },
     "Add 10% to number": {
-      press: () => updateNumber(num => num.add(num.toNumber() / 10))
+      press: () => updateNumber(num => num.add(num.mul(0.1)))
     },
     "Multiply number by 2": {
       press: () => updateNumber(num => num.mul(2))

@@ -253,11 +253,16 @@ class BAN {
       if (arrayLengthDifference >= 2) return true
       
       if (comparedArrayLength === arrayLength) {
-        
+        if (arrayLength === 2) {
+          const exponent = this.prime
+          const comparedExponent = comparedValue.prime
+          
+          return exponent > comparedExponent
+        }
       }
     }
     
-    throw new NotImplementedError("Lol you definitely did not handle some ")
+    throw new Error("Lol you definitely did not handle some rare exceptional case didn't you?")
   }
   
   addBy(value) {
@@ -278,7 +283,8 @@ class BAN {
         const addedMantissa = value / Math.pow(this.base, this.getMagnitude())
         this.setMantissa(this.getMantissa() + addedMantissa)
       } else if (value instanceof BAN) {
-        
+        const addedMantissa = value.getMantissa() / Math.pow(10, this.getMagnitude() - value.getMagnitude())
+        this.setMantissa(this.getMantissa() + addedMantissa)
       }
     } else if (this.arrayEntries.length > 2 && value instanceof BAN) {
       
