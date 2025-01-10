@@ -521,7 +521,7 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   
   toFiniteNumber() {
     const number = this.toNumber()
-    
+    return number !== Number.POSITIVE_INFINITY this
   }
   
   set base(value) {
