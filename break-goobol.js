@@ -519,6 +519,11 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     }
   }
   
+  toFiniteNumber() {
+    const number = this.toNumber()
+    
+  }
+  
   set base(value) {
     this.arrayEntries[0] = value
   }
