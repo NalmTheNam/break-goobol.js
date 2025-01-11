@@ -55,7 +55,7 @@ function numberControlPanel() {
     return html`
       <div class="control-panel-buttons">
         ${Object.entries(controlButtons).map(([name, button]) => {
-          return html`<button onclick=${button.press} disabled=${controlPanelSettings.locked}>${name}</button>`
+          return html`<button onclick=${button.press}>${name}</button>`
         })}
       </div>
     `
@@ -72,4 +72,3 @@ function startLNGI() {
 
 window.BAN = BAN
 window.updateNumber = updateNumber
-window.controlPanelSettings = controlPanelSettings
