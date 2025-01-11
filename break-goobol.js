@@ -349,18 +349,20 @@ class BAN {
   }*/
   
   powBy(value) {
-    if (value instanceof BAN) {
-      value.normalizeArray()
-      
-      const number = value.toNumber()
-      if (number !== Number.POSITIVE_INFINITY && !Number.isNaN(number))
-        value = number
-    }
-    
+    if (typeof value == "number") value = new BAN(value)
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
-      if (typeof value == "number") this.base **= value
+      let changedNumber = this.base
+      
+      if (value.arrayEntries.length === 1) changedNumber **= value.toNumber()
+      
+      if (changedNumber === Number.POSITIVE_INFINITY) {
+        this.arrayEntries[1] = Math.log10(this.base)
+        this.base = 10
+      }
+      
+      this.base = changedNumber
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
         if (typeof this.arrayEntries[1] == "number") this.arrayEntries[1] *= value
