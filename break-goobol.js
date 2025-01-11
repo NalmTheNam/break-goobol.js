@@ -328,6 +328,7 @@ class BAN {
     return clonedArray
   }
   
+  /*
   divideBy(value) {
     if (value === 0) { 
       this.arrayEntries = [Infinity]; 
@@ -342,25 +343,11 @@ class BAN {
     if (value instanceof BAN && Number.isFinite(value.toNumber())) value = value.toNumber()
     value = BAN.normalizeValue(value)
     
-    if (this.arrayEntries.length === 1) {
-      if (typeof value === "number") this.arrayEntries[0] += value
-      else if (value instanceof BAN)
-        this.arrayEntries = value.arrayEntries
-    } else if (this.arrayEntries.length === 2) {
-      if (typeof value == "number") {
-        const addedMantissa = value / Math.pow(this.base, this.getMagnitude())
-        this.setMantissa(this.getMantissa() + addedMantissa)
-      } else if (value instanceof BAN) {
-        const addedMantissa = value.getMantissa() / Math.pow(10, this.getMagnitude() - value.getMagnitude())
-        this.setMantissa(this.getMantissa() + addedMantissa)
-      }
-    } else if (this.arrayEntries.length > 2 && value instanceof BAN) {
-      
-    }
+    this.mul()
     
     this.normalizeArray()
     return this
-  }
+  }*/
   
   powBy(value) {
     if (value instanceof BAN) {
@@ -565,11 +552,6 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
       
       return Math.pow(this.base, exponent)
     }
-  }
-  
-  toFiniteNumber() {
-    const number = this.toNumber()
-    return number !== Number.POSITIVE_INFINITY ? number : this
   }
   
   set base(value) {
