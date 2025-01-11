@@ -96,7 +96,6 @@ class BAN {
   id = Math.random()
   
   arrayEntries = []
-  mantissa = 1
   sign = 0
   
   constructor(value = 0, options) {
@@ -169,9 +168,7 @@ class BAN {
       clonedArray.arrayEntries.push(clonedEntry)
     }
     
-    clonedArray.mantissa = this.mantissa
     clonedArray.sign = this.sign
-    
     return clonedArray
   }
   
@@ -385,7 +382,7 @@ class BAN {
       this.base = Math.pow(10, this.getMagnitude()) * value
     else if (this.arrayEntries.length === 2) {
       const setMagnitude = Math.log10(value)
-      this.arrayEntries[1] = this.getMagnitude() + setMagnitude
+      if (typeof this.arrayEntries[1] == "number") this.arrayEntries[1] = this.getMagnitude() + setMagnitude
     }
     
     this.normalizeArray()
@@ -513,7 +510,9 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
     const numberHasENotation = string.includes("e")
     if (!numberHasENotation) throw new Error("BAN Error: The parsed number is either infinite or not a number. Parsed number: " + parsedNumber)
     
-    const [mantissa, ...magnitudeTowers] = string.split("e")
+    const mantissa = string.split("e")[0]
+    const magnitudeTowers = string.split("e").slice(1).map(value => value == "" ? "1" : value)
+    
     const magnitude = magnitudeTowers.join("e")
     
     const parsedMantissa = Number(mantissa)
