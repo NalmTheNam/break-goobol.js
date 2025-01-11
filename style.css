@@ -23,7 +23,8 @@ button {
 }
 
 button:hover {
-  background: rgb(220, 220, 220, 80%)
+  background: rgb(220, 220, 220, 80%);
+  cursor: pointer;
 }
 
 button:active {
@@ -63,7 +64,6 @@ button:active {
   margin: 1em;
   font-size: 1.3em;
   padding: 1.3em;
-  cursor: pointer;
 }
 
 @media screen and (max-width: 1248px) {

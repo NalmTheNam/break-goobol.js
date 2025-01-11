@@ -68,6 +68,10 @@ function numberControlPanel() {
 
 function startLNGI() {
   updateControlPanelSettings(settings => ({ ...settings, locked: true }))
+  setInterval(() => {
+    updateNumber(number => number.add(1))
+    if (number().gt(50)) updateNumber(number => number.mul(1.1))
+  }, 50)
 }
 
 window.BAN = BAN
