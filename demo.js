@@ -11,7 +11,7 @@ html`
     <h2 class="number">${number}</h2>
     <p class="plain-notation-number">Plain number: 0</p>
     ${numberControlPanel()}
-    <button onclick=${startLNGI}>Start LNGI</button>
+    <button onclick=${startLNGI}>Start LNRI</button>
 `.render(document.getElementById("app"))
 
 function numberControlPanel() {
@@ -67,10 +67,16 @@ function numberControlPanel() {
 }
 
 function startLNGI() {
+  if (controlPanelSettings().locked) return
+  
   updateControlPanelSettings(settings => ({ ...settings, locked: true }))
   setInterval(() => {
+    const magnitude = number().getMagnitude()
+    
     updateNumber(number => number.add(1))
     if (number().gt(50)) updateNumber(number => number.mul(1.1))
+    if (number().gt(1e16)) updateNumber(number => number.mul(1.5 + magnitude instanceof BAN ? 100 : magnitude / 10))
+    if (number().gt(new BAN([10, 1000]))) updateNumber(number => number.pow(magnitude instanceof BAN ? 1e300 : magnitude ))
   }, 50)
 }
 

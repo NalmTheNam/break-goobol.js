@@ -246,6 +246,8 @@ class BAN {
       
       const arrayLengthDifference = arrayLength - comparedArrayLength
       
+      if (arrayLength < 2 && comparedArrayLength >= 2) return false
+      
       if (arrayLengthDifference <= -2) return false
       if (arrayLengthDifference >= 2) return true
       
@@ -259,7 +261,7 @@ class BAN {
       }
     }
     
-    throw new Error("Lol you definitely did not handle some rare exceptional case didn't you?")
+    throw new Error("You definitely did not handle some rare exceptional case didn't you?")
   }
   
   addBy(value) {
