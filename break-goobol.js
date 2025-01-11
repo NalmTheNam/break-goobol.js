@@ -354,20 +354,19 @@ class BAN {
     
     if (this.arrayEntries.length === 1) {
       let changedNumber = this.base
-      
       if (value.arrayEntries.length === 1) changedNumber **= value.toNumber()
       
       if (changedNumber === Number.POSITIVE_INFINITY) {
         this.arrayEntries[1] = Math.log10(this.base)
         this.base = 10
+        
+        return this.powBy(value)
       }
       
       this.base = changedNumber
     } else if (this.arrayEntries.length === 2) {
-      if (typeof value == "number") {
-        if (typeof this.arrayEntries[1] == "number") this.arrayEntries[1] *= value
-        else if (this.arrayEntries[1] instanceof BAN) this.arrayEntries[1].mulBy(value)
-      }
+      if (typeof this.arrayEntries[1] == "number") this.arrayEntries[1] *= value.toNumber()
+      else if (this.arrayEntries[1] instanceof BAN) this.arrayEntries[1].mulBy(value.toNumber())
     }
     
     this.normalizeArray()
