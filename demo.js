@@ -2,13 +2,16 @@ import BAN from "./break-goobol.js"
 
 const { state, effect, html } = window.BFS.MARKUP
 const [number, updateNumber] = state(new BAN(0))
+const [controlPanelSettings, updateControlPanelSettings] = state({
+  locked: false
+})
 
 html`
     <h1>break-goobol.js</h1>
     <h2 class="number">${number}</h2>
     <p class="plain-notation-number">Plain number: 0</p>
     ${numberControlPanel()}
-    <button>Start LNGI</button>
+    <button onclick=${startLNGI}>Start LNGI</button>
 `.render(document.getElementById("app"))
 
 function numberControlPanel() {
@@ -52,7 +55,7 @@ function numberControlPanel() {
     return html`
       <div class="control-panel-buttons">
         ${Object.entries(controlButtons).map(([name, button]) => {
-          return html`<button onclick=${button.press}>${name}</button>`
+          return html`<button onclick=${button.press} disabled=${controlPanelSettings.locked}>${name}</button>`
         })}
       </div>
     `
@@ -63,5 +66,10 @@ function numberControlPanel() {
   `
 }
 
+function startLNGI() {
+  updateControlPanelSettings(settings => ({ ...settings, locked: true }))
+}
+
 window.BAN = BAN
 window.updateNumber = updateNumber
+window.controlPanelSettings = controlPanelSettings
