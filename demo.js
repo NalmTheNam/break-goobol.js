@@ -76,7 +76,7 @@ function startLNGI() {
     updateNumber(number => number.add(1))
     if (number().gt(50)) updateNumber(number => number.mul(1.1))
     if (number().gt(1e16)) updateNumber(number => number.mul(1.5 + magnitude instanceof BAN ? 100 : magnitude / 10))
-    if (number().gt(new BAN([10, 1000]))) updateNumber(number => number.pow(magnitude instanceof BAN ? 1e300 : magnitude ))
+    if (number().gt(new BAN([10, 1000]))) updateNumber(number => number.pow(magnitude.toNumber?.() === Number.POSITIVE_INFINITY ? 1e300 : Math.pow(magnitude, 0.01) + 1))
   }, 50)
 }
 
