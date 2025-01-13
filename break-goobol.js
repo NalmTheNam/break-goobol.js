@@ -279,15 +279,8 @@ class BAN {
       
       this.base = changedNumber
     } else if (this.arrayEntries.length === 2) {
-      if (typeof value == "number") {
-        const addedMantissa = value / Math.pow(this.base, this.getMagnitude())
-        this.setMantissa(this.getMantissa() + addedMantissa)
-      } else if (value instanceof BAN) {
-        const addedMantissa = value.getMantissa() / Math.pow(10, this.getMagnitude() - value.getMagnitude())
-        this.setMantissa(this.getMantissa() + addedMantissa)
-      }
-    } else if (this.arrayEntries.length > 2 && value instanceof BAN) {
-      
+      const addedMantissa = value.getMantissa() / Math.pow(this.base, this.getMagnitude() - value.getMagnitude())
+      this.setMantissa(this.getMantissa() + addedMantissa)
     }
     
     this.normalizeArray()
@@ -299,6 +292,12 @@ class BAN {
     clonedArray.addBy(value)
     
     return clonedArray
+  }
+  
+  subBy(value) {
+    value = BAN.normalizeValue(value)
+    
+    
   }
   
   mulBy(value) {
@@ -386,8 +385,8 @@ class BAN {
     return clonedArray
   }
   
-  log10() {
-    return this.arrayEntries[1]
+  negate() {
+    
   }
   
   setMantissa(value) {
