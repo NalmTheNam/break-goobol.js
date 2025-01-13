@@ -22,9 +22,7 @@ class BAN {
   }
   
   static normalizeValue(value) {
-    if (value instanceof BAN) 
-      value.normalizeArray()
-      
+    if (typeof value == "number") value = new BAN(value)
     if (typeof value == "string") {
       const digits = value.split(".")
       const fractionalDigits = digits[1]
@@ -32,14 +30,10 @@ class BAN {
       // if (fractionalDigits && fractionalDigits.length > 15)
         // value = new BAN.PreciseNumber(value)
       
-      const parsedNumber = Number(value)
-      
-      if (parsedNumber === Number.POSITIVE_INFINITY || Number.isNaN(parsedNumber))
-        value = new BAN(value)
-      else 
-        value = parsedNumber
+      value = new BAN(value)
     }
     
+    value.normalizeArray()
     return value
   }
   
@@ -270,13 +264,20 @@ class BAN {
       return this
     }
     
-    if (value instanceof BAN && Number.isFinite(value.toNumber())) value = value.toNumber()
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
-      if (typeof value === "number") this.arrayEntries[0] += value
-      else if (value instanceof BAN)
-        this.arrayEntries = value.arrayEntries
+      let changedNumber = this.base
+      changedNumber += value.toNumber()
+      
+      if (changedNumber === Number.POSITIVE_INFINITY) {
+        this.arrayEntries[1] = Math.log10(this.base)
+        this.base = 10
+        
+        return this.addBy(value)
+      }
+      
+      this.base = changedNumber
     } else if (this.arrayEntries.length === 2) {
       if (typeof value == "number") {
         const addedMantissa = value / Math.pow(this.base, this.getMagnitude())
@@ -301,7 +302,6 @@ class BAN {
   }
   
   mulBy(value) {
-    if (typeof value == "number") value = new BAN(value)
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
@@ -356,7 +356,6 @@ class BAN {
   }*/
   
   powBy(value) {
-    if (typeof value == "number") value = new BAN(value)
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
