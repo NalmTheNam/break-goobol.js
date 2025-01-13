@@ -301,19 +301,26 @@ class BAN {
   }
   
   mulBy(value) {
-    if (value instanceof BAN && !Number.isFinite(value.toNumber())) value = value.toNumber()
+    if (typeof value == "number") value = new BAN(value)
     value = BAN.normalizeValue(value)
     
     if (this.arrayEntries.length === 1) {
-      if (typeof value == "number") this.arrayEntries[0] *= value
-    } else if (this.arrayEntries.length === 2) {
-      if (typeof value == "number") {
-        const valueOom = Math.floor(Math.log10(value))
-        const valueMantissa = value / 10 ** valueOom
-    
-        this.arrayEntries[1] += valueOom
-        this.setMantissa(this.getMantissa() * valueMantissa)
+      let changedNumber = this.base
+      changedNumber *= value.toNumber()
+      
+      if (changedNumber === Number.POSITIVE_INFINITY) {
+        this.arrayEntries[1] = Math.log10(this.base)
+        this.base = 10
+        
+        return this.mulBy(value)
       }
+      
+      this.base = changedNumber
+    } else if (this.arrayEntries.length === 2) {
+      if (typeof this.arrayEntries[1] == "number") this.arrayEntries[1] += value.getMagnitude()
+      else if (this.arrayEntries[1] instanceof BAN) this.arrayEntries[1].add(value.getMagnitude())
+      
+      this.setMantissa(this.getMantissa() * value.getMantissa())
     }
     
     this.normalizeArray()
@@ -354,7 +361,7 @@ class BAN {
     
     if (this.arrayEntries.length === 1) {
       let changedNumber = this.base
-      if (value.arrayEntries.length === 1) changedNumber **= value.toNumber()
+      changedNumber **= value.toNumber()
       
       if (changedNumber === Number.POSITIVE_INFINITY) {
         this.arrayEntries[1] = Math.log10(this.base)
@@ -378,6 +385,10 @@ class BAN {
     clonedArray.powBy(value)
     
     return clonedArray
+  }
+  
+  log10() {
+    return this.arrayEntries[1]
   }
   
   setMantissa(value) {
