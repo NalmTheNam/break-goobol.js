@@ -1,26 +1,6 @@
 import { BANFormat } from "./ban-intl.js"
 
 class BAN {
-  static debugMode = false
-  static getDebugHandler() {
-    return {
-      get(array, propName) {
-        const property = Reflect.get(...arguments)
-        
-        if (typeof property === "function" && propName !== "addDebugLog") {
-          return new Proxy(property, {
-            apply(func, thisArg, args) {
-              array.addDebugLog(`function ${func.name}() called with arguments "${args}"`) 
-              return Reflect.apply(...arguments)
-            },
-          })
-        }
-        
-        return property
-      }
-    }
-  }
-  
   static normalizeValue(value) {
     if (typeof value == "number") value = new BAN(value)
     if (typeof value == "string") {
@@ -83,72 +63,28 @@ class BAN {
   
   // Cloning info. This information is mostly used for debugging purposes!
   _cloned = false
-  _clonedFrom = undefined
-  
-  debugLogs = []
-  debugName = undefined
-  id = Math.random()
   
   arrayEntries = []
   sign = 0
   
   constructor(value = 0, options) {
-    this.debugName = options?.debugName
+    if (value === "clone-mode") return this
     
-    this._cloned = options?.cloned ?? false
-    this._clonedFrom = options?.clonedFrom
+    if (typeof value == "string")
+      this.setupArrayFromString(value)
+    else if (typeof value == "number")
+      this.base = value
+    else if (value instanceof Array)
+      this.arrayEntries = value
+    else if (value instanceof BAN)
+      this.arrayEntries = value.arrayEntries
     
-    if (this._cloned) {
-      this.addDebugLog(`Note: This array is a clone from another array with ID ${this._clonedFrom}.`, { type: "info" })
-    } else {
-      if (typeof value == "string")
-        this.setupArrayFromString(value)
-      else if (typeof value == "number")
-        this.base = value
-      else if (value instanceof Array)
-        this.arrayEntries = value
-      else if (value instanceof BAN)
-        this.arrayEntries = value.arrayEntries
-    
-      this.normalizeArray()
-    }
-    
-    if (BAN.debugMode) {
-      const verboseArray = new Proxy(this, BAN.getDebugHandler())
-      return verboseArray
-    }
-    
+    this.normalizeArray()
     return this
   }
   
-  addDebugLog(message, options) {
-    const log = {
-      type: options?.type ?? "debug", 
-      message, 
-      date: new Date()
-    }
-    
-    this.debugLogs.push(log)
-  }
-  
-  printDebugLogs() {
-    console.groupCollapsed(`BAN array debug logs | ID: "${this.debugName ?? this.id}"${this._cloned ? " (Cloned)" : ""}`)
-    
-    for (const log of this.debugLogs) {
-      console[log.type](`[${log.date}] ${log.message}`)
-    }
-    
-    console.groupEnd()
-  }
-  
   clone() {
-    const clonedArray = new BAN("clone-mode", {
-      debugName: this.debugName,
-      cloned: true,
-      clonedFrom: this.debugName ?? this.id
-    })
-    
-    this.addDebugLog("Cloning this array's contents to array ID #" + clonedArray.id, { type: "info" })
+    const clonedArray = new BAN("clone-mode")
     
     for (const entry of this.arrayEntries) {
       const isEntryBAN = entry instanceof BAN
@@ -424,9 +360,6 @@ class BAN {
   }
   
   normalizeArray() {
-    this.addDebugLog("Entry count: " + this.arrayEntries.length)
-    this.addDebugLog(`[Normalizer] Looping through array entries in order to normalize them!`, { type: "info" })
-    
     if (this.arrayEntries.length === 1)
       return this.normalizeFirstEntry()
     
@@ -464,25 +397,18 @@ class BAN {
     if (firstEntry === Number.POSITIVE_INFINITY || firstEntry === Number.NEGATIVE_INFINITY) return
     
     if (firstEntry instanceof BAN) {
-      this.addDebugLog("The first entry is a BAN array! Setting the array entries to the first entry's array entries...", { type: "info" })
-        
       this.arrayEntries = firstEntry.arrayEntries
-      this.normalizeArray()
-      
-      return
+      return this.normalizeArray()
     }
       
     if (firstEntry instanceof Array) {
-      this.addDebugLog(`The first entry is an array! 
-Nested arrays will be flattened if there is only 1 entry in the array.`, { type: "warn" })
-        
       this.arrayEntries = entry
-      this.normalizeArray()
-      
-      return
+      return this.normalizeArray()
     }  
     
     if (firstEntry > Number.MAX_SAFE_INTEGER) {
+      this.sign = Math.sign(this.base)
+      
       this.base = 10
       this.arrayEntries[1] = Math.log10(firstEntry)
     }
@@ -510,8 +436,6 @@ Nested arrays will be flattened if there is only 1 entry in the array.`, { type:
   
   setupArrayFromString(string) {
     if (typeof string !== "string") return
-    
-    this.addDebugLog("Setting up array from string...", { type: "info" })
     
     const parsedNumber = Number(string)
     if (parsedNumber !== Number.POSITIVE_INFINITY && !Number.isNaN(parsedNumber)) {
