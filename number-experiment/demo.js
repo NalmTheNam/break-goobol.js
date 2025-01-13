@@ -1,4 +1,4 @@
-import BAN from "./break-goobol.js"
+import BAN from "../break-goobol.js"
 
 const { state, effect, html } = window.BFS.MARKUP
 const [number, updateNumber] = state(new BAN(0))
