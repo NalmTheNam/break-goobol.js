@@ -137,18 +137,13 @@ class BAN {
       
     }
     
-    if (this.arrayEntries.length === 1) {
-      return new Intl.NumberFormat('en', notationOptions[options.notation].formatOptions).format(this.toNumber())
-    }
-    
     if (this.arrayEntries.length === 2) {
-      const formattedMagnitude = typeof magnitude == "number" ? new BAN(magnitude).toString(options) : magnitude.toString(options)
-      /*
-      if (this.notation !== "mixed-scientific" && magnitude < 308) {
+      if (magnitude < 16) {
         const number = Math.pow(10, magnitude) * mantissa
         return new Intl.NumberFormat('en', options.formatOptions).format(number)
-      }*/
+      }
       
+      const formattedMagnitude = typeof magnitude == "number" ? new BAN(magnitude).toString(options) : magnitude.toString(options)
       return `${mantissa.toFixed(2)}e${formattedMagnitude}`
     }
   }
@@ -188,12 +183,12 @@ class BAN {
   
   addBy(value) {
     if (value === Number.POSITIVE_INFINITY || value === Number.NEGATIVE_INFINITY) {
-      this.arrayEntries = [value]
+      this.arrayEntries = [10, value]
       return this
     }
     
     value = BAN.normalizeValue(value)
-    if (value.sign < 0) value.mutables.negate()
+    if (this.sign < 0) value.mutables.negate()
     
     if (this.arrayEntries.length == 2) {
       const addedMantissa = value.getMantissa() / Math.pow(this.base, this.getMagnitude() - value.getMagnitude())
@@ -219,20 +214,8 @@ class BAN {
   
   mulBy(value) {
     value = BAN.normalizeValue(value)
-    
-    if (this.arrayEntries.length === 1) {
-      let changedNumber = this.base
-      changedNumber *= value.toNumber()
-      
-      if (changedNumber === Number.POSITIVE_INFINITY) {
-        this.arrayEntries[1] = Math.log10(this.base)
-        this.base = 10
-        
-        return this.mulBy(value)
-      }
-      
-      this.base = changedNumber
-    } else if (this.arrayEntries.length === 2) {
+  
+    if (this.arrayEntries.length === 2) {
       if (typeof this.arrayEntries[1] == "number") this.arrayEntries[1] += value.getMagnitude()
       else if (this.arrayEntries[1] instanceof BAN) this.arrayEntries[1].add(value.getMagnitude())
       
@@ -314,9 +297,11 @@ class BAN {
   }
   
   setMantissa(value) {
+    const exponent = this.arrayEntries[1]
+    
     if (this.arrayEntries.length === 2) {
       const setMagnitude = Math.log10(value)
-      if (typeof this.arrayEntries[1] == "number") this.arrayEntries[1] = this.getMagnitude() + setMagnitude
+      if (typeof exponent == "number") this.arrayEntries[1] = this.getMagnitude() + setMagnitude
     }
     
     this.normalizeArray()
@@ -337,8 +322,8 @@ class BAN {
   }
   
   getMagnitude() {
-    if (this.base === 0) return 0
-    const magnitude = this.arrayEntries[1]
+    let magnitude = this.arrayEntries[1]
+    if (magnitude == Number.NEGATIVE_INFINITY) magnitude = 0
     
     if (magnitude instanceof BAN) return magnitude
     return Math.floor(magnitude)
@@ -346,9 +331,9 @@ class BAN {
   
   normalizeArray() {
     if (this.arrayEntries.length === 1) {
-      this.sign = Math.sign(this.base)
+      this.sign = Math.sign(this.arrayEntries[0])
       
-      this.arrayEntries[1] = Math.log10(this.base)
+      this.arrayEntries[1] = Math.log10(this.arrayEntries[0])
       this.base = 10
     }
     
