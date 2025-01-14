@@ -54,6 +54,12 @@ button:active {
   overflow-wrap: break-word;
 }
 
+.calculator {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 0 10em;
+}
+
 .control-panel-buttons {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
