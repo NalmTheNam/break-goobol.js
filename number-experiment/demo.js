@@ -105,15 +105,15 @@ function setupCalculator() {
   const actionButtons = {
     "+": () => {}, 
     "-": () => {}, 
-    "*", 
-    "/"
+    "*": () => {}, 
+    "/": () => {}
   }
   
-  for (const actionButton of actionButtons) {
+  for (const [actionName, action] of Object.entries(actionButtons)) {
     const button = document.createElement("button")
     
     button.classList.add("action-button")
-    button.textContent = actionButton
+    button.textContent = actionName
     
     calculator.appendChild(button)
   }

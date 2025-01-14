@@ -60,16 +60,14 @@ button:active {
   padding: 0 10em;
 }
 
-.control-panel-buttons {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  padding: 0 10em
-}
-
-.control-panel-buttons button {
+.calculator button {
   margin: 1em;
   font-size: 2em;
   padding: 1em;
+}
+
+.calculator .action-button {
+  grid-column: 5;
 }
 
 @media screen and (max-width: 1248px) {
