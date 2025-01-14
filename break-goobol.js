@@ -321,8 +321,14 @@ class BAN {
     return clonedArray
   }
   
+  mutables = {
+    negate() {
+      this.sign = -this.sign
+    }
+  }
+  
   negate() {
-    
+    return this.clone().mutables.negate()
   }
   
   setMantissa(value) {
@@ -478,14 +484,14 @@ class BAN {
   }
   
   toNumber() {
-    if (this.arrayEntries.length === 1 || this.prime === 1) return this.base
+    if (this.arrayEntries.length === 1 || this.prime === 1) return this.sign > 0 ? this.base : -this.base
     else if (this.arrayEntries.length === 2) {
       let exponent = this.arrayEntries[1]
       
       if (exponent instanceof BAN) 
         exponent = exponent.toNumber()
       
-      return Math.pow(this.base, exponent)
+      return this.sign > 0 ? Math.pow(this.base, exponent) : -Math.pow(this.base, exponent)
     }
   }
   
