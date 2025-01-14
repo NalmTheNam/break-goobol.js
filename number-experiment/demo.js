@@ -20,6 +20,8 @@ class State extends EventTarget {
 import BAN from "../break-goobol.js"
 const number = new State(new BAN(0))
 
+const calculator = document.querySelector(".calculator")
+
 /*
 function renderControlPanel() {
   const controlButtons = {
@@ -90,11 +92,15 @@ function startLNGI() {
 }
 */
 
+function setupCalculator() {
+    
+}
+
 number.addEventListener("statechange", ({ detail: value }) => {
   document.querySelector(".number").textContent = value
 })
 
-setInterval(() => number.update(number.add(1)), 50)
+setInterval(() => number.update(number => number.add(1)), 50)
 
 window.BAN = BAN
 window.number = number
