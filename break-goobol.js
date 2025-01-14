@@ -195,7 +195,7 @@ class BAN {
     value = BAN.normalizeValue(value)
     if (value.sign < 0) value.mutables.negate()
     
-    if (this.arrayEntries.length == 1 || this.arrayEntries.length == 2) {
+    if (this.arrayEntries.length == 2) {
       const addedMantissa = value.getMantissa() / Math.pow(this.base, this.getMagnitude() - value.getMagnitude())
       this.setMantissa(this.getMantissa() + addedMantissa)
     }
@@ -314,9 +314,7 @@ class BAN {
   }
   
   setMantissa(value) {
-    if (this.arrayEntries.length === 1)
-      this.base = Math.pow(10, this.getMagnitude()) * value
-    else if (this.arrayEntries.length === 2) {
+    if (this.arrayEntries.length === 2) {
       const setMagnitude = Math.log10(value)
       if (typeof this.arrayEntries[1] == "number") this.arrayEntries[1] = this.getMagnitude() + setMagnitude
     }
@@ -327,7 +325,6 @@ class BAN {
   
   getMantissa() {
     let mantissa = 0
-    if (this.arrayEntries.length === 1) mantissa = this.base / Math.pow(10, this.getMagnitude())
     
     if (this.arrayEntries.length === 2) {
       const magnitude = this.getMagnitude()
@@ -340,7 +337,7 @@ class BAN {
   }
   
   getMagnitude() {
-    if (this.arrayEntries.length === 1) return Math.floor(Math.log10(this.base))
+    if (this.base === 0) return 0
     const magnitude = this.arrayEntries[1]
     
     if (magnitude instanceof BAN) return magnitude
@@ -348,8 +345,12 @@ class BAN {
   }
   
   normalizeArray() {
-    if (this.arrayEntries.length === 1)
-      return this.normalizeFirstEntry()
+    if (this.arrayEntries.length === 1) {
+      this.sign = Math.sign(this.base)
+      
+      this.arrayEntries[1] = Math.log10(this.base)
+      this.base = 10
+    }
     
     for (let i = 0; i < this.arrayEntries.length; i++) {
       const entry = this.arrayEntries[i]
@@ -375,30 +376,6 @@ class BAN {
       
       if (entry instanceof BAN)
         entry.normalizeArray()
-    }
-  }
-  
-  normalizeFirstEntry() {
-    const firstEntry = this.arrayEntries[0]
-    
-    // Infinity is infinite so why are we even normalizing anymore?
-    if (firstEntry === Number.POSITIVE_INFINITY || firstEntry === Number.NEGATIVE_INFINITY) return
-    
-    if (firstEntry instanceof BAN) {
-      this.arrayEntries = firstEntry.arrayEntries
-      return this.normalizeArray()
-    }
-      
-    if (firstEntry instanceof Array) {
-      this.arrayEntries = entry
-      return this.normalizeArray()
-    }  
-    
-    if (firstEntry > Number.MAX_SAFE_INTEGER) {
-      this.sign = Math.sign(this.base)
-      
-      this.base = 10
-      this.arrayEntries[1] = Math.log10(firstEntry)
     }
   }
   
@@ -466,8 +443,7 @@ class BAN {
   }
   
   toNumber() {
-    if (this.arrayEntries.length === 1 || this.prime === 1) return this.sign > 0 ? this.base : -this.base
-    else if (this.arrayEntries.length === 2) {
+    if (this.arrayEntries.length === 2) {
       let exponent = this.arrayEntries[1]
       
       if (exponent instanceof BAN) 
