@@ -62,8 +62,8 @@ button:active {
 
 .control-panel-buttons button {
   margin: 1em;
-  font-size: 1.3em;
-  padding: 1.3em;
+  font-size: 2em;
+  padding: 1em;
 }
 
 @media screen and (max-width: 1248px) {

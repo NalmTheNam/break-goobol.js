@@ -1,6 +1,18 @@
+class State extends EventTarget {
+  constructor(value) {
+    super()
+    this.value = value
+    
+    return [() => this.value, this.update]
+  }
+  
+  update(value) {
+    const updateEvent = new Event("statechange")
+  }
+}
+
 import BAN from "../break-goobol.js"
 
-const { state, effect, html } = window.BFS.MARKUP
 const [number, updateNumber] = state(new BAN(0))
 const [controlPanelSettings, updateControlPanelSettings] = state({
   locked: false
@@ -10,7 +22,7 @@ html`
     <h1>break-goobol.js</h1>
     <h2 class="number">${number}</h2>
     <p class="plain-notation-number">Plain number: 0</p>
-    <h2 style="margin-top: 4px">Control Panel</h2>
+    <h2 style="margin-bottom: 4px">Calculator</h2>
     ${numberControlPanel()}
     <button onclick=${startLNGI}>Start LNRI</button>
 `.render(document.getElementById("app"))
@@ -41,10 +53,10 @@ function numberControlPanel() {
     "x10": {
       press: () => updateNumber(num => num.mul(10))
     },
-    "^2": {
+    "x^2": {
       press: () => updateNumber(num => num.pow(2))
     },
-    "^3": {
+    "x^3": {
       press: () => updateNumber(num => num.pow(3))
     },
     "AC": {
