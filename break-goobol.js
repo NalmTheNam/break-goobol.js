@@ -65,7 +65,7 @@ class BAN {
   _cloned = false
   
   arrayEntries = []
-  sign = 0
+  sign = 1
   
   constructor(value = 0, options) {
     if (value === "clone-mode") return this
@@ -115,15 +115,7 @@ class BAN {
     const notationOptions = {
       "mixed-scientific": {
         formatOptions: {
-          getMaximumFractionDigits: () => {
-            let digitSubtractor = Math.floor(Math.log10(this.base + 1))
-            if (digitSubtractor > 2) digitSubtractor = 2
-            
-            return 2 - digitSubtractor
-          },
-          get maximumFractionDigits() {
-            return this.getMaximumFractionDigits()
-          },
+          maximumFractionDigits: 2,
           notation: "standard"
         },
       }
@@ -146,7 +138,7 @@ class BAN {
     }
     
     if (this.arrayEntries.length === 1) {
-      return new Intl.NumberFormat('en', notationOptions[options.notation].formatOptions).format(this.base)
+      return new Intl.NumberFormat('en', notationOptions[options.notation].formatOptions).format(this.toNumber())
     }
     
     if (this.arrayEntries.length === 2) {
@@ -322,8 +314,9 @@ class BAN {
   }
   
   mutables = {
-    negate() {
+    negate: () => {
       this.sign = -this.sign
+      return this
     }
   }
   
