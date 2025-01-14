@@ -2,32 +2,26 @@ class State extends EventTarget {
   constructor(value) {
     super()
     this.value = value
-    
-    return [() => this.value, this.update]
   }
   
   update(value) {
-    const updateEvent = new Event("statechange")
+    const updatedValue = typeof value == "function" ? value(this.value) : value
+    this.value = updatedValue
+    
+    const updateEvent = new CustomEvent("statechange", { detail: this.value })
+    this.dispatchEvent(updateEvent)
+  }
+  
+  valueOf() {
+    return this.value
   }
 }
 
 import BAN from "../break-goobol.js"
+const number = new State(new BAN(0))
 
-const [number, updateNumber] = state(new BAN(0))
-const [controlPanelSettings, updateControlPanelSettings] = state({
-  locked: false
-})
-
-html`
-    <h1>break-goobol.js</h1>
-    <h2 class="number">${number}</h2>
-    <p class="plain-notation-number">Plain number: 0</p>
-    <h2 style="margin-bottom: 4px">Calculator</h2>
-    ${numberControlPanel()}
-    <button onclick=${startLNGI}>Start LNRI</button>
-`.render(document.getElementById("app"))
-
-function numberControlPanel() {
+/*
+function renderControlPanel() {
   const controlButtons = {
     "+1": {
       press: () => updateNumber(num => num.add(1))
@@ -78,7 +72,9 @@ function numberControlPanel() {
     </div>
   `
 }
+*/
 
+/*
 function startLNGI() {
   if (controlPanelSettings().locked) return
   
@@ -92,6 +88,13 @@ function startLNGI() {
     if (number().gt(new BAN([10, 1000]))) updateNumber(number => number.pow(magnitude.toNumber?.() === Number.POSITIVE_INFINITY ? 1e300 : Math.pow(magnitude, 0.01) + 1))
   }, 50)
 }
+*/
+
+number.addEventListener("statechange", ({ detail: value }) => {
+  document.querySelector(".number").textContent = value
+})
+
+setInterval(() => number.update(number.add(1)), 50)
 
 window.BAN = BAN
-window.updateNumber = updateNumber
+window.number = number
