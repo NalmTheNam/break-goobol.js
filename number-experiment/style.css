@@ -58,10 +58,11 @@ button:active {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   padding: 0 10em;
+  column-gap: 1em;
+  row-gap: 1em;
 }
 
 .calculator button {
-  margin: 1em;
   font-size: 2em;
   padding: 1em;
 }
