@@ -123,8 +123,6 @@ number.addEventListener("statechange", ({ detail: value }) => {
   document.querySelector(".number").textContent = value
 })
 
-setInterval(() => number.update(number => number.add(1)), 50)
-
 setupCalculator()
 
 window.BAN = BAN

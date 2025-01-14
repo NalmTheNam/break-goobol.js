@@ -193,20 +193,9 @@ class BAN {
     }
     
     value = BAN.normalizeValue(value)
+    if (value.sign < 0) value.mutables.negate()
     
-    if (this.arrayEntries.length === 1) {
-      let changedNumber = this.base
-      changedNumber += value.toNumber()
-      
-      if (changedNumber === Number.POSITIVE_INFINITY) {
-        this.arrayEntries[1] = Math.log10(this.base)
-        this.base = 10
-        
-        return this.addBy(value)
-      }
-      
-      this.base = changedNumber
-    } else if (this.arrayEntries.length === 2) {
+    if (this.arrayEntries.length == 1 || this.arrayEntries.length == 2) {
       const addedMantissa = value.getMantissa() / Math.pow(this.base, this.getMagnitude() - value.getMagnitude())
       this.setMantissa(this.getMantissa() + addedMantissa)
     }
@@ -351,7 +340,7 @@ class BAN {
   }
   
   getMagnitude() {
-    if (this.arrayEntries.length === 1) return Math.floor(Math.log10(this.toNumber()))
+    if (this.arrayEntries.length === 1) return Math.floor(Math.log10(this.base))
     const magnitude = this.arrayEntries[1]
     
     if (magnitude instanceof BAN) return magnitude
